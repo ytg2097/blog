@@ -4,8 +4,16 @@ module.exports = [
     link: '/ddd/'
   },
   {
+    text: '微服务',
+    link: '/microservice/'
+  },
+  {
     text: 'Netty',
     link: '/netty/'
+  },
+  {
+    text: '响应式编程',
+    link: '/reactor/'
   },
   {
     text: '多线程',

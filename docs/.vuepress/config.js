@@ -43,6 +43,7 @@ module.exports = ctx => ({
         nav: require('./nav/zh'),
         sidebar: {
           '/ddd/':getDDDSidebar(),
+          '/microservice/':getMSSidebar(),
 
 
         }
@@ -85,8 +86,24 @@ function getDDDSidebar () {
         'stratgy',
         'tactics',
         'DDD-microservice',
-        'CQRS',
         'event-source',
+      ]
+    }
+  ]
+}
+function getMSSidebar () {
+  return [
+    {
+      title: '微服务',
+      collapsable: false,
+      children: [
+        '服务设计',
+        '服务拆分',
+        '分布式事务',
+        'CQRS',
+        '服务间通信',
+        '服务部署',
+        '服务质量',
       ]
     }
   ]
