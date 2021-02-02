@@ -84,6 +84,9 @@ function getDDDSidebar () {
       children: [
         'stratgy',
         'tactics',
+        'DDD-microservice',
+        'CQRS',
+        'event-source',
       ]
     }
   ]
