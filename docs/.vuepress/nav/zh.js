@@ -4,10 +4,6 @@ module.exports = [
     link: '/ddd/'
   },
   {
-    text: '设计模式',
-    link: '/design/'
-  },
-  {
     text: 'Netty',
     link: '/netty/'
   },
@@ -24,8 +20,11 @@ module.exports = [
     link: '/base/'
   },
   {
+    text: '设计模式',
+    link: '/design/'
+  },
+  {
     text: '框架',
-    ariaLabel: '了解更多',
     items: [
       {
         text: 'Spring Cloud',
@@ -74,6 +73,20 @@ module.exports = [
             link: '/webflux/'
           },
         ]
+      },
+
+    ]
+  },
+  {
+    text: '架构',
+    items: [
+      {
+        text: '六边形架构',
+        link: '/spring/cloud/eureka/',
+      },
+      {
+        text: '清洁架构',
+        link: '/spring/cloud/eureka/',
       },
 
     ]
