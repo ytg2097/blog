@@ -5,7 +5,7 @@ module.exports = ctx => ({
   locales: {
     '/': {
       lang: 'zh-CN',
-      title: '花哥的博客',
+      title: '花哥的成长日记',
       description: '好好学习 天天向上'
     }
   },
@@ -22,8 +22,8 @@ module.exports = ctx => ({
   ],
   theme: '@vuepress/vue',
   themeConfig: {
-    repo: 'vuejs/vuepress',
-    editLinks: true,
+    repo: 'ytg2097/blog',
+    // editLinks: true,
     docsDir: 'packages/docs/docs',
     // #697 Provided by the official algolia team.
     algolia: ctx.isProd ? ({
@@ -78,7 +78,14 @@ module.exports = ctx => ({
 
 function getDDDSidebar () {
   return [
-    // 'assets',
+    {
+      title: 'DDD',
+      collapsable: false,
+      children: [
+        'stratgy',
+        'tactics',
+      ]
+    }
   ]
 }
 function getApiSidebar () {

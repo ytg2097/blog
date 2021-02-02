@@ -10,17 +10,17 @@
   ],
   "homepage": "https://github.com/ytg2097",
   "bugs": {
-    "url": "https://github.com/vuejs/vuepress/issues"
+    "url": "https://github.com/ytg2097/blog/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vuejs/vuepress.git"
+    "url": "git+https://github.com/ytg2097/blog.git"
   },
   "license": "MIT",
   "author": "Evan You",
   "scripts": {
     "build": "vuepress build docs ",
-    "dev": "vuepress dev docs",
+    "dev": "vuepress dev docs --temp .temp",
     "lint-md": "yarn lint-md:style && yarn lint-md:wording",
     "lint-md:style": "remark --quiet --frail .",
     "lint-md:wording": "textlint ./docs/**/*.md",

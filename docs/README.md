@@ -1,7 +1,7 @@
 ---
 home: true
 heroImage: /hero.png
-actionText: 快速上手 →
+actionText: 查看最新 →
 actionLink: /ddd/
 features:
 - title: 简洁至上
