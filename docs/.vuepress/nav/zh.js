@@ -16,7 +16,7 @@ module.exports = [
     link: '/reactor/'
   },
   {
-    text: '多线程',
+    text: '并发',
     link: '/concurrent/'
   },
   {

@@ -45,7 +45,6 @@ module.exports = ctx => ({
           '/ddd/':getDDDSidebar(),
           '/microservice/':getMSSidebar(),
 
-
         }
       }
     }
