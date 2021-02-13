@@ -9,7 +9,7 @@ sidebar: auto
 - [基础](./base.md)
 - [线程与线程池](./thread.md)
 - [JMM](./jmm.md)
-- [同步](./sync.md)
+- [synchronized与volatile](./sync.md)
 - [锁](./lock.md)
 - [AQS](./aqs.md)
 - [并发包](./concurrent-package.md)
