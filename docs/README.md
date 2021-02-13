@@ -2,6 +2,6 @@
 home: true
 heroImage: /hero.png
 actionText: 查看最新 →
-actionLink: /ddd/tactics
+actionLink: /concurrent/jmm
 footer: MIT Licensed | Copyright © 2021-present 杨同港 ytg2097@163.com
 ---
