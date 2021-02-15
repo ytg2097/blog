@@ -8,7 +8,7 @@ sidebar: auto
 
 AQS通过内置的FIFO队列完成资源获取线程的排队工作.
 
-AQS自身没有实现任何同步借口, 仅仅是定义了若干同步状态获取和释放的方法供自定义组件使用, 同步器既可以支持独占式的获取同步状态, 也可以支持共享式的获取同步状态. 
+AQS自身没有实现任何同步接口, 仅仅是定义了若干同步状态获取和释放的方法供自定义组件使用, 同步器既可以支持独占式的获取同步状态, 也可以支持共享式的获取同步状态. 
 
 AQS面向锁, 锁面向使用者.
 
@@ -151,17 +151,17 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
 设置首节点的工作是由成功获取同步状态的线程来完成的, 由于只有一个线程能够获取到同步状态, 所以不需要CAS来保证, 只需要将首节点设置为原首节点的后继节点,
 然后断开原首节点的next引用即可.
 
-## 独占式锁的获取与释放
+## 独占式同步状态获取与释放
 
 ```java
 
     public void acquire(int arg){
         
         if (
-            // 1. tryAcquire(arg) 线程安全的独占式获取同步状态, 如果成功直接返回
+            //  tryAcquire(arg) 线程安全的独占式获取同步状态, 如果成功直接返回
             !tryAcquire(arg) && 
-            // 2. addWaiter(Node.EXCLUSIVE)  构建一个新的同步节点并加入到同步队列的尾部
-            // 3. acquireQueued(Node node, arg) 使新的同步节点以死循环的方式尝试获取同步状态
+            //  addWaiter(Node.EXCLUSIVE)  构建一个新的同步节点并加入到同步队列的尾部
+            //  acquireQueued(Node node, arg) 使新的同步节点以死循环的方式尝试获取同步状态
             //                                  若是获取不到则阻塞节点中的线程, 阻塞的唤醒依靠前驱节点的唤醒或被中断
             acquireQueued(addWaiter(Node.EXCLUSIVE), arg)){
             
@@ -171,19 +171,19 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
 
 ```
 
-### 1.新增同步节点
+### 1. 新增同步节点
 
 ```java
 
     private Node addWaiter(Node mode) {
-            // 1. 构造一个新的同步节点
+            //  构造一个新的同步节点
             Node node = new Node(Thread.currentThread(), mode);
-            // 2. 取到原尾节点赋值到一个临时变量
+            //  取到原尾节点赋值到一个临时变量
             Node pred = tail;
             if (pred != null) {
-                // 3. 将新的同步节点的前驱节点设置为原尾节点
+                //  将新的同步节点的前驱节点设置为原尾节点
                 node.prev = pred;
-                // 4.     线程安全的将AQS持有的尾节点引用替换为新的同步节点地址
+                //      线程安全的将AQS持有的尾节点引用替换为新的同步节点地址
                 //        private final boolean compareAndSetTail(Node expect, Node update) {     
                 //              return unsafe.compareAndSwapObject(this, tailOffset, expect, update);
                 //        }
@@ -237,19 +237,19 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
         try {
             boolean interrupted = false;
             for (;;) {
-                // 1. 当前节点的前驱节点
+                //  当前节点的前驱节点
                 final Node p = node.predecessor();
-                // 2. 如果前驱节点是首节点 同时 当前节点也获取到了同步状态
+                //  如果前驱节点是首节点 同时 当前节点也获取到了同步状态
                 if (p == head && tryAcquire(arg)) {
-                    // 3. 将当前节点设置为首节点
+                    //  将当前节点设置为首节点
                     setHead(node);
-                    // 4. 原首节点已经释放同步状态, 需要取消与当前节点的关联
+                    //  原首节点已经释放同步状态, 需要取消与当前节点的关联
                     p.next = null; // help GC
                     failed = false;
                     return interrupted;
                 }
-                // 5. shouldParkAfterFailedAcquire(p, node) 见名思义, 在获取同步状态失败之后应该进入等待了
-                // 6. parkAndCheckInterrupt() 当前节点进入等待, 等待唤醒再入自旋
+                //  shouldParkAfterFailedAcquire(p, node) 见名思义, 在获取同步状态失败之后应该进入等待了
+                //  parkAndCheckInterrupt() 当前节点进入等待, 等待唤醒再入自旋
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     parkAndCheckInterrupt())
                     interrupted = true;
@@ -279,11 +279,7 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
                 pred.next = node;
             // 如果前驱没有被中断, 而是在等待队列中, 那么CAS把前驱的waitStatus修改为SIGNAL 
             } else {
-                /*
-                 * waitStatus must be 0 or PROPAGATE.  Indicate that we
-                 * need a signal, but don't park yet.  Caller will need to
-                 * retry to make sure it cannot acquire before parking.
-                 */
+              
                 compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
             }
             return false;
