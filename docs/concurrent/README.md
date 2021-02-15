@@ -10,6 +10,6 @@ sidebar: auto
 - [线程与线程池](./thread.md)
 - [JMM](./jmm.md)
 - [synchronized与volatile](./sync.md)
-- [锁](./lock.md)
 - [AQS](./aqs.md)
+- [锁](./lock.md)
 - [并发包](./concurrent-package.md)
