@@ -11,5 +11,5 @@ sidebar: auto
 - [JMM](./jmm.md)
 - [synchronized与volatile](./sync.md)
 - [AQS](./aqs.md)
-- [锁](./lock.md)
+- [Lock](./lock.md)
 - [并发包](./concurrent-package.md)
