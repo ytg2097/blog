@@ -179,6 +179,7 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
             //  构造一个新的同步节点
             Node node = new Node(Thread.currentThread(), mode);
             //  取到原尾节点赋值到一个临时变量
+            // 注意, 在这里由于tail由volatile修饰, 所以这一步在并发访问时会是串行化的
             Node pred = tail;
             if (pred != null) {
                 //  将新的同步节点的前驱节点设置为原尾节点
@@ -256,7 +257,7 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
             }
         } finally {
             if (failed)
-                // 7.同步状态没有获取到, 并且没有进入等待, 取消获取同步状态
+                // 7.同步状态没有获取到, 将当前节点置为取消状态
                 cancelAcquire(node);
         }
     }
@@ -271,15 +272,15 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
             // 如果是,再次进入等待, 等待下次唤醒再入自旋
             if (ws == Node.SIGNAL)
                 return true;
-            // 如果不是, 检查一下前驱节点是不是被中断或取消了, 如果是的话, 跳过前驱节点关联前前驱
+            // 如果不是, 跳过同步队列中当前节点之前的所有失效节点去关联同步队列中的最后一个有效节点
             if (ws > 0) {
                 do {
                     node.prev = pred = pred.prev;
                 } while (pred.waitStatus > 0);
                 pred.next = node;
-            // 如果前驱没有被中断, 而是在等待队列中, 那么CAS把前驱的waitStatus修改为SIGNAL 
             } else {
               
+                // 如果前驱节点没有取消, 那么CAS把前驱的waitStatus修改为SIGNAL ,然后return false, 当前节点继续自旋
                 compareAndSetWaitStatus(pred, ws, Node.SIGNAL);
             }
             return false;
@@ -289,6 +290,195 @@ AQS持有同步队列的首节点和尾节点的引用, 如果有线程获取同
 在acquireQueued中, 只有当前驱节点是首节点时才可以尝试获取同步状态的原因有两点: 第一, 维护FIFO原则; 第二, 首节点释放同步状态后, 会唤醒后继节点, 
 后继节点被唤醒后需要检查自己的前驱节点是否是首节点.
 
-acquire调用流程图
+#### acquire调用流程图
 ![acquire](../.vuepress/images/acquire.png)
+
 图中前驱节点为首节点且能够获取到同步状态的判断条件和线程进入等待状态是获取同步状态的自旋过程
+
+#### acquire的finally部分
+
+没有获取到同步状态
+```java 
+    private void cancelAcquire(Node node) {
+        // Ignore if node doesn't exist
+        if (node == null)
+            return;
+
+        // 取消当前节点持有的线程关联
+        node.thread = null;
+
+        // 跳过已经进入取消状态的节点, 获取当前节点之前的有效节点(同步队列中最后的有效节点)
+        Node pred = node.prev;
+        while (pred.waitStatus > 0)
+            node.prev = pred = pred.prev;
+
+        // 获取同步队列中最后的有效节点的后继节点
+        Node predNext = pred.next;
+
+        // 将当前节点的置为取消状态
+        node.waitStatus = Node.CANCELLED;
+
+        // 如果当前节点是尾节点, 并且CAS将尾节点更新为同步队列中最后的有效节点成功
+        if (node == tail && compareAndSetTail(node, pred)) {
+            // 更新同步队列中最后的有效节点的后继节点为空(重新调整同步队列的长度)
+            compareAndSetNext(pred, predNext, null);
+        } else {
+           
+            int ws;
+            // 如果同步队列的最后一个有效节点不是首节点 && 
+            // (同步队列的最后一个有效节点的等待状态是SIGNAL || 同步节点的最后一个节点的waitStatus更新为SIGNAL成功) &&
+            // 同步队列的最后一个有效节点关联的线程不为空
+            if (pred != head &&
+                ((ws = pred.waitStatus) == Node.SIGNAL ||
+                 (ws <= 0 && compareAndSetWaitStatus(pred, ws, Node.SIGNAL))) &&
+                pred.thread != null) {
+                // 如果当前节点的后继节点存在且有效, 将其链接到同步节点的最后一个有效节点
+                Node next = node.next;
+                if (next != null && next.waitStatus <= 0)
+                    compareAndSetNext(pred, predNext, next);
+            } else {
+                // 唤醒当前节点的下一个有效节点
+                unparkSuccessor(node);
+            }
+
+            node.next = node; // help GC
+        }
+        
+        
+    }
+
+```
+
+### 3. 释放同步状态
+
+```java 
+
+        public final boolean release(int arg) {
+            if (tryRelease(arg)) {
+                Node h = head;
+                if (h != null && h.waitStatus != 0)
+                    // 唤醒首节点的下一个有效节点
+                    unparkSuccessor(h);
+                return true;
+            }
+            return false;
+        }
+```
+
+## 共享式获取与释放同步状态
+
+共享式获取同步状态与独占式的最大区别在于同一时刻能否有多个线程同时获取到同步状态.
+比如读写文件, 如果一个程序在对文件进行读操作, 那么写操作将被阻塞, 而读操作可以在多个线程中同时进行. 写操作要求独占式访问, 读操作可以共享访问.
+
+### 1. 释放共享状态
+
+```java 
+    
+      public final void acquireShared(int arg) {
+            // 先尝试一次共享式获取同步状态, 如果成功直接返回
+            if (tryAcquireShared(arg) < 0)
+                // 失败后不断自旋获取同步状态
+                doAcquireShared(arg);
+      }
+      
+      private void doAcquireShared(int arg) {
+              // 向同步队列中尾部新增一个节点, 与独占式的区别是这个节点的nextWater是一个SHARED常量
+              final Node node = addWaiter(Node.SHARED);
+              boolean failed = true;
+              try {
+                  boolean interrupted = false;
+                  // 同样是自旋获取同步状态
+                  for (;;) {
+                      final Node p = node.predecessor();
+                      if (p == head) {
+                          // 如果当前节点的前驱节点是首节点并且当前节点获取到了同步状态
+                          int r = tryAcquireShared(arg);
+                          if (r >= 0) {
+                              // 将当前节点设置为首节点并且唤醒后续节点
+                              setHeadAndPropagate(node, r);
+                              p.next = null; // help GC
+                              if (interrupted)
+                                  selfInterrupt();
+                              failed = false;
+                              return;
+                          }
+                      }
+                     
+                      if (shouldParkAfterFailedAcquire(p, node) &&
+                          parkAndCheckInterrupt())
+                          interrupted = true;
+                  }
+              } finally {
+                  if (failed)
+                      cancelAcquire(node);
+              }
+      }
+      
+    private void setHeadAndPropagate(Node node, int propagate) {
+        // 获取到原来的首节点
+        Node h = head; 
+        // 更新首节点的当前节点
+        setHead(node);
+         // 判断条件，唤醒后续节点
+         // propagate > 0 有后续资源
+         // h == null 旧的头节点 因为前面 addWaiter， 肯定不会为空，应该是防止 h.waitStatus < 0 空指针的写法
+         // (h = head) == null 当前的 头节点，再判断状态
+         // waitStatus < 0 后续节点就需要被唤醒
+        if (propagate > 0 || h == null || h.waitStatus < 0 ||
+            (h = head) == null || h.waitStatus < 0) {
+            Node s = node.next;
+            // 当前节点为共享, 唤醒后续节点
+            if (s == null || s.isShared())
+                doReleaseShared();
+        }
+    }
+    
+    // 唤醒后续节点  
+    private void doReleaseShared() {
+            
+            for (;;) {
+                // 获取首节点
+                Node h = head;
+                // 判断同步队列中不止一个元素
+                if (h != null && h != tail) {
+                    int ws = h.waitStatus;
+                    // 判断首节点的状态是否为SIGNAL, 即是否可以唤醒后续节点
+                    if (ws == Node.SIGNAL) {
+                        // 将首节点的状态更新为0, 如果更新失败, 继续自旋
+                        if (!compareAndSetWaitStatus(h, Node.SIGNAL, 0))
+                            continue;           
+                        // 更新成功后唤醒首节点的后续节点  
+                        unparkSuccessor(h);
+                    }
+                    // 如果首节点的等待状态为0 且CAS更新状态为PROPAGATE失败, 继续自旋
+                    else if (ws == 0 &&
+                             !compareAndSetWaitStatus(h, 0, Node.PROPAGATE))
+                        continue;               
+                }
+                // 当首节点改变时, 继续自旋
+                if (h == head)                 
+                    break;
+            }
+    }  
+```
+![acquireShared](../.vuepress/images/acquireShared.png)
+
+int tryAcquireShared(int arg)这个方法返回三种结果
+- 小于0. 表示没有获取到同步状态
+- 等于0. 表示获取到了同步状态, 但后续节点不可以再获取同步状态
+- 大于0. 表示获取到了同步状态, 后续节点再共享模式下也可以获取到同步状态.
+### 2. 释放同步状态
+
+```java 
+
+    public final boolean releaseShared(int arg) {
+        if (tryReleaseShared(arg)) {
+            // 释放共享资源
+            doReleaseShared();
+            return true;
+        }
+        return false;
+    }    
+```
+
+
