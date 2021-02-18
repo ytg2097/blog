@@ -1,6 +1,8 @@
 ---
+
+prev: ./gateway
 sidebar: auto
 ---
 
-# Spring Cloud Gateway
+# Feign 
 一日一更, 敬请期待...

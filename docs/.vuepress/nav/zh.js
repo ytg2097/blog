@@ -39,15 +39,15 @@ module.exports = [
         items: [
           {
             text: 'Eureka',
-            link: '/spring/cloud/eureka/'
+            link: '/spring/cloud/eureka'
           },
           {
             text: 'Gateway',
-            link: '/spring/cloud/gateway/'
+            link: '/spring/cloud/gateway'
           },
           {
             text: 'Feign',
-            link: '/spring/cloud/feign/'
+            link: '/spring/cloud/feign'
           }
         ]
       },

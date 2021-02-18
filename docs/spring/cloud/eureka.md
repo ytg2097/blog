@@ -1,4 +1,5 @@
 ---
+next: ./gateway
 sidebar: auto
 ---
 

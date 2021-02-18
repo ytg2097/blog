@@ -1,6 +1,8 @@
 ---
+prev: ./eureka
+next: ./feign
 sidebar: auto
 ---
 
-# Feign 
+# Spring Cloud Gateway
 一日一更, 敬请期待...
