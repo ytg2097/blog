@@ -89,15 +89,19 @@ module.exports = [
     text: '架构',
     items: [
       {
-        text: '六边形架构',
-        link: '/spring/cloud/eureka/',
+        text: '六边形',
+        link: '/architecture/hexagon',
       },
       {
         text: '清洁架构',
-        link: '/spring/cloud/eureka/',
+        link: '/architecture/clean',
       },
 
     ]
   },
+  {
+    text: '更多',
+    link: '/more/'
+  }
 
 ]
