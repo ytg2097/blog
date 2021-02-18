@@ -1,4 +1,6 @@
 ---
+prev: ./
+next: ./thread
 sidebar: auto
 ---
 

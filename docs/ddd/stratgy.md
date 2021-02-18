@@ -1,4 +1,6 @@
 ---
+prev: ./
+next: ./tactics
 sidebar: auto
 ---
 

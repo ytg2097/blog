@@ -1,4 +1,5 @@
 ---
+prev: ./event-source
 sidebar: auto
 ---
 

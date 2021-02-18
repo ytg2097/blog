@@ -1,4 +1,6 @@
 ---
+next: ./ts
+prev: ./split
 sidebar: auto
 ---
 

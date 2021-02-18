@@ -1,4 +1,6 @@
 ---
+next: ./CQRS
+prev: ./quality
 sidebar: auto
 ---
 

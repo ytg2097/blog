@@ -1,4 +1,5 @@
 ---
+next: ./split
 sidebar: auto
 ---
 
@@ -84,9 +85,9 @@ sidebar: auto
 
 ### 数据一致性模式
 
-- [Saga](./分布式事务.md)
-- [2PC](./分布式事务.md)
-- [TCC](./分布式事务.md)
+- [Saga](./ts.md##Saga)
+- [2PC](./ts.md##两阶段提交)
+- [TCC](./ts.md##三阶段提交)
 
 ### 数据查询的相关模式
 

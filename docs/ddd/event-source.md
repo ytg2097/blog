@@ -1,4 +1,6 @@
 ---
+prev: ./tactics
+next: ./DDD-microservice 
 sidebar: auto
 ---
 

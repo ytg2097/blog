@@ -1,4 +1,5 @@
 ---
+prev: ./lock
 sidebar: auto
 ---
 

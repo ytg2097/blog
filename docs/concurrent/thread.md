@@ -1,4 +1,6 @@
 ---
+prev: ./base
+next: ./jmm
 sidebar: auto
 ---
 

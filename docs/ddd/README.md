@@ -1,4 +1,7 @@
-
+---
+next: ./stratgy
+sidebar: auto
+---
 
 # 领域驱动设计
 

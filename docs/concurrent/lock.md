@@ -1,4 +1,6 @@
 ---
+prev: ./aqs
+next: ./concurrent-package
 sidebar: auto
 ---
 

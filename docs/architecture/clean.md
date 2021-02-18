@@ -1,4 +1,5 @@
 ---
+prev: ./hexagon
 sidebar: auto
 ---
 

@@ -1,4 +1,6 @@
 ---
+next: ./deploy
+prev: ./ts
 sidebar: auto
 ---
 

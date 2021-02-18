@@ -1,4 +1,6 @@
 ---
+next: ./contact
+prev: ./design
 sidebar: auto
 ---
 

@@ -1,4 +1,6 @@
 ---
+prev: ./JS
+next: ./go
 sidebar: auto
 ---
 

@@ -1,4 +1,5 @@
 ---
+next: ./clean
 sidebar: auto
 ---
 

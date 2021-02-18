@@ -1,4 +1,5 @@
 ---
+next: ./base
 sidebar: auto
 ---
 

@@ -1,4 +1,6 @@
 ---
+prev: ./stratgy
+next: ./event-source
 sidebar: auto
 ---
 

@@ -1,4 +1,6 @@
 ---
+prev: ./go
+next: ./k8s
 sidebar: auto
 ---
 

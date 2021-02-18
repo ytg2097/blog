@@ -1,4 +1,6 @@
 ---
+prev: ./clean-code
+next: ./JS
 sidebar: auto
 ---
 
