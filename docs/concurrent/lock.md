@@ -331,3 +331,18 @@ ReentrantReadWriteLock内部的AQS采用**按位切割使用**的方式在一个
 ### 为何不支持锁升级
 
 写锁只有在读锁未被持有的情况下才能获取
+
+## LockSupport
+
+它提供了线程的阻塞与唤醒功能, 其中park方法的blocker对象可以为开发人员提供详细的堆栈信息.
+
+## Condition
+
+Condition提供类似Object的监视方法
+
+Condition是AQS的内部类, 因此每个Condition都拥有AQS的引用
+
+ConditionObject内部维护了一个AQS的同步队列, 当调用了awit()时, 相当于同步队列的首节点移动到了等待队列中.
+
+当调用signal()时相会将等待队列中等待时间最长的节点移动到同步队列时. 当这个节点从同步队列中获取到锁时, 从awit()返回.
+ 
