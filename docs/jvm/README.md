@@ -1,6 +1,6 @@
 ---
 next: ./memory
-sidebar: auto
+sidebar: false
 ---
 
 # JVM

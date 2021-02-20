@@ -1,6 +1,6 @@
 ---
 next: ./tdd
-sidebar: auto
+sidebar: false
 ---
 
 # 持续更新

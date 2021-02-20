@@ -1,6 +1,6 @@
 ---
 next: ./base
-sidebar: auto
+sidebar: false
 ---
 
 # 并发

@@ -1,6 +1,6 @@
 ---
 next: ./stratgy
-sidebar: auto
+sidebar: false
 ---
 
 # 领域驱动设计
