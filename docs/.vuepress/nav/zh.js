@@ -7,13 +7,14 @@ module.exports = [
     text: '微服务',
     link: '/microservice/'
   },
+
+  {
+    text: '反应式编程',
+    link: '/reactor/'
+  },
   {
     text: 'Netty',
     link: '/netty/'
-  },
-  {
-    text: '响应式编程',
-    link: '/reactor/'
   },
   {
     text: '并发',
