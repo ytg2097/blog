@@ -1,17 +1,16 @@
 ---
-sidebar: auto
+sidebar: false
 ---
 
 #  Java基础
 
-一日一更, 敬请期待...
 ## HashMap
 
 ## LinkedList
 
 ## ArrayList
 
-## IO
+## [IO](./io.md)
 
 ## Stream
 
