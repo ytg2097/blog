@@ -4,16 +4,15 @@ sidebar: false
 
 #  Java基础
 
-## HashMap
+## 1.[IO](./io.md)
 
-## LinkedList
+## 2.HashMap
 
-## ArrayList
+## 3.LinkedList
 
-## [IO](./io.md)
+## 4.ArrayList
 
-## Stream
+## 5.Stream
 
-## Lambda
 
 
