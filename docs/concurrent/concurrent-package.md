@@ -120,26 +120,83 @@ CompletionService将Executor和BlockingQueue融合, 将Callable和Runnable提交
 ExecutorCompletionService实现了CompletionService, 它在构造函数中创建一个BlockingQueue保存计算的结果, 当计算完成时调用FutureTask的done方法, 当提交任务时, 首先将任务包装为一个QueueingFuture, 它实现了
 FutureTask, 并重写了done方法, 将结果放入BlockingQueue中. 多个ExecutorCompletionService可以共用一个Executor 
 
-## 同步容器类
 
-current包内基于CAS与volatile构建了一系列的并发容器. 如ConcurrentHashMap, ConcurrentSkipListMap(SortedMap线程安全版)和ConcurrentSkipListSet(SortedSet线程安全版). Queue, DeDeque接口及其实现类等.  
+## Queue
 
-### Queue
+Queue是JDK1.5之后出现的集合接口, 它用于保存一组待处理的有先后顺序的的数据.   
 
-Queue用于保存一组待处理的数据, 它不会阻塞, 如果队列为空, 获取元素的操作将返回null. 
+```java 
+public interface Queue<E> extends Collection<E> {
+    /**
+     * 向队列的尾端插入一个元素, 当队列满导致插入失败时, 抛出一个IllegalStateExceltion
+     */
+    boolean add(E e);
 
-Queue有几个常用的子类:
+    /**
+     * 向队列的尾端插入一个元素, 当队列满导致插入失败时, 返回false
+     */
+    boolean offer(E e);
 
-> - 
->
->
+    /**
+     * 返回并删除队列中的第一个元素, 当队列为空时, 抛出NoSuchElementException
+     */
+    E remove();
+
+    /**
+     * 返回并删除队列中的第一个元素, 当队列为空时, 会返回一个null
+     */
+    E poll();
+
+    /**
+     * 返回队列中的第一个元素, 不删除元素, 若队列为空时, 抛出一个NoSuchElementExceptoin
+     */
+    E element();
+
+    /**
+     * 返回队列中的第一个元素, 不删除元素, 若队列为空时, 返回一个null
+     */
+    E peek();
+}
+```
+
+![queue-class](../.vuepress/images/queue-class.png)
+
+**常用的队列实现**
+
+|类名| 描述|
+|---|---|
+|LinkedBlockingQueue| 链表结构的有界阻塞队列|
+|ArrayBlockingQueue| 数组结构的有界阻塞队列|
+|PriorityBlocking| 支持优先级排序的无界阻塞队列|
+|SynchronousQueue| 同步移交队列, 不存储元素|
+|LinkedTransferQueue|链表结构的无界阻塞队列|
+|LinkedBlockingDeque| 链表结构的双向阻塞队列|
+|ConcurrentLinkedDeque| 链表结构的线程安全的双向阻塞队列|
+
+### BlockingQueue
+
+BlockingQueue继承了Queue接口, 增加了可阻塞的获取和插入等操作, 当队列为空时, 将一直阻塞, 直到出现可用元素. 若队列已满, 插入操作将一直阻塞.
+
+实现了BlockingQueue的LinkedBlockingQueue和ArrayBlockingQueue都是FIFO队列. 
+
+**PriorityBlockingQueue**是优先级排列队列, 初始化时需要指定Comparator, 若没有指定, 操作的元素需要实现Comparable接口. 
+
+**SynchronizedQueue**它不会为队列中的元素维护存储空间, 与其他队列不同的是它维护了一组线程, 因为没有存储功能, 所以put和take会一直阻塞, 直到有一个线程准备好参与到交付过程中. 
+ 
 
 ### Deque
 
-### CopyOnWriterArrayList
+Deque继承了Queue, 它是一个双向队列. 可以用于替代Stack. 由于Stack的实现继承了Vector, 加锁的粒度为方法级别. 效率过低. 并且基于数组实现, 而栈的特点是首位操作, 遍历情况少, 所以Stack类已经不推荐使用. 
+
+Deque适用于工作取密模式, 适用于解决即是生产者也是消费者的问题, 当发现新任务时, 将任务放到自己的队列的末端. 
+
+::: tip LinkedList
+LinkedList同时实现了List与Deque接口, 它的功能面是最全的
+:::
+## CopyOnWriterArrayList
 
 
-### ConcurrentHashMap
+## ConcurrentHashMap
 
 在并发变成中HashMap不能保证线程安全, 而使用线程安全的HashTable效率过于低下, 于是出现了ConcurrentHashMap, 它用于替代同步且基于散列的Map, 它采用分段锁来实现更大程度的共享. 
 
@@ -159,7 +216,7 @@ CurrentHashMap有Segment数组结构和HashEntry数组结构组成. Segment继�
 ::: 
 
 
-### Fork/Join框架
+## Fork/Join框架
 
 
 ## 闭锁
