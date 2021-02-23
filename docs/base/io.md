@@ -1,5 +1,6 @@
 ---
 prev: ./
+next: ./hashmap
 sidebar: auto
 ---
 

@@ -43,6 +43,7 @@ ThreadLocal类能够使线程中的某个值与对象关联起来. 它提供了g
 
 ### ThreadLocal部分源码解读
 
+---
 ```java 
 
 public class ThreadLocal<T> {
@@ -98,6 +99,8 @@ public class Thread implements Runnable {
 
 ### ThreadLocalMap
 
+---
+
 ThreadLocal并不是存储数据的容器, 它只是一个引用, 它的内部维护了一个ThreadLocalMap容器, 元素以ThreadLocal实例为key, 保存对象为value. ThreadLocalMap并没有实现Map接口, 而是自行实现了Map的功能.
 它维护的Entry对象继承了WeakReference, 目的是将ThreadLocal对象的生命周期与Thread的生命周期解绑.
 
@@ -121,6 +124,7 @@ ThreadLocal并不是存储数据的容器, 它只是一个引用, 它的内部�
 
 ### 内存泄露
 
+---
 **ThreadLocal的内存模型**
 
 ![threadLocal](../.vuepress/images/threadlocal.png)
@@ -132,6 +136,7 @@ ThreadLocal并不是存储数据的容器, 它只是一个引用, 它的内部�
 
 ### ThreadLocalMap的优化
 
+---
 ```java 
         private Entry getEntry(ThreadLocal<?> key) {
             int i = key.threadLocalHashCode & (table.length - 1);
@@ -190,6 +195,7 @@ ExecutorService的方法
 
 ### 延迟任务与周期任务
 
+---
 ::: warning Timer
 Timer在执行所有定时任务时只会创建一个线程, 如果某个任务的执行任务时间过长会影响其他TimerTask的定时精确性.
 
@@ -227,6 +233,7 @@ DelayQueue中的PriorityQueue会对队列中的ScheduledFutureTask进行排序, 
 
 ### CompletionService
 
+---
 当提交一组计算任务, 并希望在计算完成后获得结果时可以使用CompletionService. 
 
 CompletionService将Executor和BlockingQueue融合, 将Callable和Runnable提交过后, 使用类似于队列操作的take和poll来获得已完成的结果.
@@ -306,6 +313,9 @@ public interface Queue<E> extends Collection<E> {
 
 ### BlockingQueue
 
+
+---
+
 BlockingQueue继承了Queue接口, 增加了可阻塞的获取和插入等操作, 当队列为空时, 将一直阻塞, 直到出现可用元素. 若队列已满, 插入操作将一直阻塞.
 
 实现了BlockingQueue的LinkedBlockingQueue和ArrayBlockingQueue都是FIFO队列. 
@@ -317,6 +327,7 @@ BlockingQueue继承了Queue接口, 增加了可阻塞的获取和插入等操作
 
 ### Deque
 
+---
 Deque继承了Queue, 它是一个双向队列. 可以用于替代Stack. 由于Stack的实现继承了Vector, 加锁的粒度为方法级别. 效率过低. 并且基于数组实现, 而栈的特点是首位操作, 遍历情况少, 所以Stack类已经不推荐使用. 
 
 Deque适用于工作取密模式. 解决即是生产者也是消费者的问题, 当发现新任务时, 将任务放到自己的队列的末端. 
@@ -324,10 +335,20 @@ Deque适用于工作取密模式. 解决即是生产者也是消费者的问题,
 ::: tip LinkedList
 LinkedList同时实现了List与Deque接口, 它的功能面是最全的
 :::
-## CopyOnWriterArrayList
+## CopyOnWriteArrayList
 
+CopyOnWriteArrayList在遍历操作为主要操作(读多写少)的情况下用于替代同步List, 提供更好的并发性能, 并且在迭代时不需要对容器进行加锁或复制.
 
+如果有多个调用者同时要求相同的资源(如内存或者磁盘上的数据存储), 他们会共同获取相同的指针指向相同的资源, 直到某个调用者视图修改资源内容时, CopyOnWriteArrayList才会真正复制一份专用副本给调用者, 而其他调用者所见到的最初的资源仍然保持不变, 修改完成后会将原容器
+的引用指向新容器.
+
+因为CopyOnWrite的写时复制机制, 所以在进行写操作时, 内存里会同时驻扎两个对象的内存, 旧的对象和新写入的对象(在复制时只是复制容器里的引用, 只有在写的时候才会创建新的对象添加到新容器里, 而旧容器里的对象还在使用, 因此会有两份对象内存). 
+如果写入对象占用的内存比较大, 比如说200M左右, 那么再写100M进去, 内存就会占用300M, 这是很可能造成频繁的YoungGC和FullGC.
+
+同时由于读写分别在不同的容器上, 在写的过程中读不会阻塞, 但未切换到新容器引用之前, 是读不到刚写入的数据的. 
+ 
 ## ConcurrentHashMap
+
 
 在并发变成中HashMap不能保证线程安全, 而使用线程安全的HashTable效率过于低下, 于是出现了ConcurrentHashMap, 它用于替代同步且基于散列的Map, 它采用分段锁来实现更大程度的共享. 
 
@@ -348,6 +369,7 @@ CurrentHashMap有Segment数组结构和HashEntry数组结构组成. Segment继�
 
 
 ## Fork/Join框架
+
 
 ## 闭锁
 
@@ -508,5 +530,6 @@ public class CyclicBarrierTest{
 
 ### Exchanger
 
+---
 双方栅栏, 各方在栅栏位置交换数据, 当两方执行不对称操作时, 如一条线程向缓冲区写入数据, 另一条读取数据, 两个线程可以使用Exchanger来会和, 并把写入的缓冲区和空缓冲区交换.    
 

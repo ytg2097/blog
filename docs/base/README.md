@@ -4,15 +4,15 @@ sidebar: false
 
 #  Java基础
 
-## 1.[IO](./io.md)
+- [IO](./io.md)
 
-## 2.HashMap
+- [HashMap](./hashmap.md)
 
-## 3.LinkedList
+- [ArrayList](./arraylist.md)
 
-## 4.ArrayList
+- [LinkedList](./linkedlist.md)
 
-## 5.Stream
+- [Stream](./stream.md)
 
-
+- ...
 
