@@ -1,9 +1,8 @@
 ---
-prev: ./k8s
-next: ./uml
+prev: ./protobuf
 sidebar: auto
 ---
 
-# Protobuf
+# UML
 
 一日一更, 敬请期待...
