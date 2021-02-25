@@ -14,3 +14,7 @@ next: ./component
 - [Netty的群发消息](./group.md)
 - [Netty心跳检测](./heartbeat.md)
 - ...
+
+::: tip 提示
+在学习Netty之前建议先学习[Reactor编程](../reactor/README.md)与Java的[NIO](../base/io.md##NIO)
+:::
