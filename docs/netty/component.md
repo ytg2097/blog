@@ -268,21 +268,26 @@ ChannelFuture的await的等待时间不等于IO操作的超时时间.
  > ChannelOutboundHandler接口扩展了ChannelHandler接口, 用于处理channel的出站事件
  
  |方法|描述|
- |bind| 当请求channel被绑定到本地地址时调用|
- |connect|当请求channel连接到远程节点时调用|
- |disconnect| 当请求channel从远程节点断开时调用, 此时还未关闭|
- |close|当请求channel关闭时调用|
- |deregister| 当请求channel从eventloop注销时调用|
- |read| 当请求从channel中读取数据时调用|
- |flush| 当请求通过channel向远程节点冲刷数据时调用|
- |write| 当请求通过channel向远程节点写入数据时调用|
+ |---|---|
+ |bind| 当**请求**channel被绑定到本地地址时调用|
+ |connect|当**请求**channel连接到远程节点时调用|
+ |disconnect| 当**请求**channel从远程节点断开时调用, 此时还未关闭|
+ |close|当**请求**channel关闭时调用|
+ |deregister| 当**请求**channel从eventloop注销时调用|
+ |read| 当**请求**从channel中读取数据时调用|
+ |flush| 当**请求**通过channel向远程节点冲刷数据时调用|
+ |write| 当**请求**通过channel向远程节点写入数据时调用|
  
  ::: tip ChannelPromise
  ChannelPromise接口扩展了ChannelFuture接口, 它提供的setSuccess和setFailure方法会使Future立刻进入完成状态 
  :::
+ 
+ ::: tip 注意
+ 出站操作触发的OutboundHandler中的方法在真正的操作发生之前调用的. 比如read方法是在请求读取数据也就是读之前触发的 
+ :::
  ### ChannelHandlerAdapter
  
- todo...
+TODO ...
  ## ChannelPipeline
  
  ## EventLoop
