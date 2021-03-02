@@ -13,7 +13,7 @@ sidebar: auto
 - **A线程用CAS更新一个volatile变量, 随后B线程读这个volatile变量**
 
 java的CAS会使用现代处理器上提供的高效机器级别的原子指令, 这些原子指令以原子方式对内存进行读-改-写操作, 这是多处理器中实现同步的关键. 
-同时volatile变量的读/写和CAS可以实现线程之间的通信. 把这些特性整合到一起, 就形成了整个current包实现的基石. 看过current包源码后会发现, 有一个通用的实现模式.
+同时volatile变量的读/写和CAS可以实现线程之间的通信. 把这些特性整合到一起, 就形成了整个Concurrent包实现的基石. 看过Concurrent包源码后会发现, 有一个通用的实现模式.
 
 首先, 声明共享变量为volatile. 
 
@@ -186,6 +186,7 @@ Executors的工厂方法.
 
 ExecutorService的方法
 | 方法名| 描述| 
+| --- | --- | 
 |shutdown|平缓关闭, 不再接受新任务, 同时等待已提交的任务执行完毕, 包括还未执行的任务|
 |shutdownNow| 立刻关闭, 并返回未执行的任务|
 |isShutDown|当调用shutdown或shutdownNow后返回true|
