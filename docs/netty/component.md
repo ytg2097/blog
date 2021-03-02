@@ -287,11 +287,144 @@ ChannelFuture的await的等待时间不等于IO操作的超时时间.
  :::
  ### ChannelHandlerAdapter
  
-TODO ...
+ChannelHandlerAdapter中提供了一个`isSharable()`方法, 可以返回当前ChannelHandler是否是线程安全的.
+
+ChannelHandlerAdapter有两个子类, 一个ChannelInboundHandlerAdapter, 一个ChannelOutboundHandlerAdapter, 分别提供了出入站钩子方法的默认实现.
  ## ChannelPipeline
  
+ ChannelPipeline是拦截过滤器的高级模式, 每一个channel都会在创建时同时创建一个对应的ChannelPipeline, 
+ 
+ ```java 
+  *                                                 I/O Request
+  *                                            via {@link Channel} or
+  *                                        {@link ChannelHandlerContext}
+  *                                                      |
+  *  +---------------------------------------------------+---------------+
+  *  |                           ChannelPipeline         |               |
+  *  |                                                  \|/              |
+  *  |    +---------------------+            +-----------+----------+    |
+  *  |    | Inbound Handler  N  |            | Outbound Handler  1  |    |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |              /|\                                  |               |
+  *  |               |                                  \|/              |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |    | Inbound Handler N-1 |            | Outbound Handler  2  |    |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |              /|\                                  .               |
+  *  |               .                                   .               |
+  *  | ChannelHandlerContext.fireIN_EVT() ChannelHandlerContext.OUT_EVT()|
+  *  |        [ method call]                       [method call]         |
+  *  |               .                                   .               |
+  *  |               .                                  \|/              |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |    | Inbound Handler  2  |            | Outbound Handler M-1 |    |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |              /|\                                  |               |
+  *  |               |                                  \|/              |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |    | Inbound Handler  1  |            | Outbound Handler  M  |    |
+  *  |    +----------+----------+            +-----------+----------+    |
+  *  |              /|\                                  |               |
+  *  +---------------+-----------------------------------+---------------+
+  *                  |                                  \|/
+  *  +---------------+-----------------------------------+---------------+
+  *  |               |                                   |               |
+  *  |       [ Socket.read() ]                    [ Socket.write() ]     |
+  *  |                                                                   |
+  *  |  Netty Internal I/O Threads (Transport Implementation)            |
+  *  +-------------------------------------------------------------------+
+ ```
+ pipeline中的handler头尾顺序取决于事件是出站还是入站, pipeline.add()添加的handler会混合添加到pipeline中, 入站事件流经的第一个handler是first, 出站事件流经的第一个handler是last. 
+ 
+ 当调用channel的write方法时, 数据会从pipeline的最后一个开始写, 直到第一个, 最后写入到网络中. 
+ 
+ --- 
+ 在添加BusinessChannelHandler时, 可以指定一个EventExecutorGroup, 将业务逻辑提交给一个线程池去执行, 避免阻塞io线程, 也可以在channelHandler中自己指定一个线程池. 
+ 
+ ```java 
+ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
+     
+     // netty提供的一个线程池
+     private static final EventExecutorGroup EVENT_EXECUTORS = new DefaultEventExecutorGroup(10);
+     
+     @Override
+     protected void initChannel(SocketChannel channel) throws Exception {
+         // 添加handler时同时指定一个线程池
+         channel.pipeline().addLast(EVENT_EXECUTORS,new MyServerHandler());
+     }
+ }
+ 
+ public class MyClientHandler extends SimpleChannelInboundHandler<String> {
+     
+     private static final ThreadPoolExecutor BUSINESS_THREAD_POOL_EXECUTOR = 
+             new ThreadPoolExecutor(3,10,30, TimeUnit.SECONDS, 
+                     new LinkedBlockingQueue<>(10),
+                     task -> new Thread(task,"netty-business-thread-"),
+                     new ThreadPoolExecutor.AbortPolicy());
+     
+     @Override
+     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+ 
+         Future<String> future = BUSINESS_THREAD_POOL_EXECUTOR.submit(() -> "数据库记录");
+         BUSINESS_THREAD_POOL_EXECUTOR.execute(() -> System.out.println("执行业务逻辑"));
+     }
+ }
+
+ ```
+ 
+ ### ChannelHandlerContext
+ 
+ pipeline中实际上保存的是channelHandlerContext对象, 由一个个的context组成了一个双向链表, 每当有一个handler添加到pipeline时, 都会创建一个context对象, 它代表了handler与pipeline之间的关联. 
+ 
+ ```java 
+ public class DefaultChannelPipeline implements ChannelPipeline {
+ 
+      ...
+     final AbstractChannelHandlerContext head;
+     final AbstractChannelHandlerContext tail;
+     
+    @Override
+    public final ChannelPipeline addFirst(EventExecutorGroup group, String name, ChannelHandler handler) {
+        final AbstractChannelHandlerContext newCtx;
+        synchronized (this) {
+            checkMultiplicity(handler);
+            name = filterName(name, handler);
+
+            newCtx = newContext(group, name, handler);
+
+            // 这里添加到pipeline中的实际上是context
+            addFirst0(newCtx);
+
+            if (!registered) {
+                newCtx.setAddPending();
+                callHandlerCallbackLater(newCtx, true);
+                return this;
+            }
+
+            EventExecutor executor = newCtx.executor();
+            if (!executor.inEventLoop()) {
+                callHandlerAddedInEventLoop(newCtx, executor);
+                return this;
+            }
+        }
+        callHandlerAdded0(newCtx);
+        return this;
+    }   
+    private AbstractChannelHandlerContext newContext(EventExecutorGroup group, String name, ChannelHandler handler) {
+        // context对象保存pipeline与handler的引用
+        return new DefaultChannelHandlerContext(this, childExecutor(group), name, handler);
+    }      
+ ```
+ 
+ Context对象中的一些方法也存在于channel和pipeline中, 当调用channel和pipeline上的这些方法时, 他们会沿着整个pipeline从后向前传播, 而调用context中的相同方法时, 则只会从当前所关联的channelHandler开始, 并且
+ 只会传播给下一个能够处理该事件的handler. pipeline中的事件传播也是通过context调用完成的.
+ 
+ 因为context和handler之间的关联是final的, 所以可以缓存他的引用.
+ 
+  
  ## EventLoop
  
+ Netty的EventLoop是一个单线程固定延迟的线程池
  ## Bootstrap
  
  ## ByteBuf

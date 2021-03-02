@@ -8,7 +8,7 @@ next: ./arraylist
 
 ![hashmap](../.vuepress/images/hashmap.png)
 
-HashMap底层基于数组和链表(单向)实现, 当链表中元素达到8个之后会转化为红黑树. 
+HashMap底层基于数组和链表(单向)实现, jdk1.8之后当链表中元素达到8个之后会转化为红黑树.  当红黑树的节点数量到达6之后退化为单向链表
 
 ## hashcode与31
 
@@ -320,8 +320,14 @@ wiki百科中的红黑树
     // onlyIfAbsent  if true, 不修改因存在键值对
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
-                   
-        Node<K,V>[] tab; Node<K,V> p; int n, i;
+         
+        // 要插入的借点数组数组           
+        Node<K,V>[] tab;
+        // 已存在的节点
+        Node<K,V> p; 
+        // n = tab.length
+        // i = 
+        int n, i;
         // 若数组为空经过resize()初始化一下
         if ((tab = table) == null || (n = tab.length) == 0){
             n = (tab = resize()).length;
@@ -329,35 +335,49 @@ wiki百科中的红黑树
         
         // --------------------
         
-        // 查看经过索引计算后的位置是否有键值对存在
+        // 查看经过索引计算后的位置是否有节点存在
         if ((p = tab[i = (n - 1) & hash]) == null){
             // 没有则直接创建一个节点并set上
             tab[i] = newNode(hash, key, value, null);
         else {
+          
             Node<K,V> e; K k;
             
-            // 查看一下本次put的key的hash与已存在键值对的key的hash是否相等, 
-            // 且
+            // 若hash相同且key相同, 将已存在的节点指向 e
             if (p.hash == hash &&
-                ((k = p.key) == key || (key != null && key.equals(k))))
+                ((k = p.key) == key || (key != null && key.equals(k)))){
+                 
                 e = p;
-            else if (p instanceof TreeNode)
+            
+            // 如果这个节点已经调整为了红黑树
+            }else if (p instanceof TreeNode){
+            
+                // 向红黑树中插入借点
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
-            else {
+            
+            // 链表
+            }else {
                 for (int binCount = 0; ; ++binCount) {
+                    // 已经到达链表尾部, 向尾部插入节点
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
+                        // 链表长度到达8, 调整为红黑树 
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             treeifyBin(tab, hash);
                         break;
                     }
+                    // 链表中的节点与当前要插入的节点相同, 停止遍历
                     if (e.hash == hash &&
-                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        ((k = e.key) == key || (key != null && key.equals(k)))){
                         break;
+                    }
                     p = e;
                 }
             }
+            
+            //  如果存在相同节点
             if (e != null) { // existing mapping for key
+                // 修改节点的value
                 V oldValue = e.value;
                 if (!onlyIfAbsent || oldValue == null)
                     e.value = value;
@@ -366,20 +386,156 @@ wiki百科中的红黑树
             }
         }
         ++modCount;
+        // 扩容
         if (++size > threshold)
             resize();
         afterNodeInsertion(evict);
         return null;
     }
 
-
+    // 链表转红黑树方法
+    final void treeifyBin(Node<K,V>[] tab, int hash) {
+        int n, index; Node<K,V> e;
+        
+        // 虽然链表长度已经到达8了, 但是实际的Node数组长度不到64,  这个时候也不会进行树化, 而是扩容一下
+        // 也就是树化操作的前提条件还有一个就是数组桶大小要大于等于64
+        if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
+            resize();
+        else if ((e = tab[index = (n - 1) & hash]) != null) {
+            TreeNode<K,V> hd = null, tl = null;
+            do {
+                // 将链表转为树, 但还不是红黑树
+                TreeNode<K,V> p = replacementTreeNode(e, null);
+                if (tl == null)
+                    hd = p;
+                else {
+                    p.prev = tl;
+                    tl.next = p;
+                }
+                tl = p;
+            } while ((e = e.next) != null);
+            if ((tab[index] = hd) != null)
+            // 树转红黑树, 进行旋转染色
+                hd.treeify(tab);
+        }
+    }
 ```
 ### 查询
 
-### 遍历
+``` java 
+
+    public V get(Object key) {
+        Node<K,V> e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
+
+    final Node<K,V> getNode(int hash, Object key) {
+        Node<K,V>[] tab; Node<K,V> first, e; int n; K k;
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+            (first = tab[(n - 1) & hash]) != null) {
+            // always check first node  先看看第一个节点是否匹配, 如果匹配直接返回, 如果不匹配则向下匹配
+            if (first.hash == hash && 
+                ((k = first.key) == key || (key != null && key.equals(k))))
+                return first;
+            
+            if ((e = first.next) != null) {
+            
+                if (first instanceof TreeNode)
+                    // 从树中查询
+                    return ((TreeNode<K,V>)first).getTreeNode(hash, key);
+                do {
+                    // 遍历链表
+                    if (e.hash == hash &&
+                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        return e;
+                } while ((e = e.next) != null);
+            }
+        }
+        return null;
+    }
+```
 
 ### 删除
 
+```java 
+    public V remove(Object key) {
+        Node<K,V> e;
+        return (e = removeNode(hash(key), key, null, false, true)) == null ?
+            null : e.value;
+    }
+
+    final Node<K,V> removeNode(int hash, Object key, Object value,
+                               boolean matchValue, boolean movable) {
+                               
+        Node<K,V>[] tab; Node<K,V> p; int n, index;
+        if ((tab = table) != null && (n = tab.length) > 0 &&
+            (p = tab[index = (n - 1) & hash]) != null) {
+            Node<K,V> node = null, e; K k; V v;
+            // 流程与查询一样, 先定位到节点
+            if (p.hash == hash &&
+                ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p;
+            else if ((e = p.next) != null) {
+                if (p instanceof TreeNode)
+                    node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
+                else {
+                    do {
+                        if (e.hash == hash &&
+                            ((k = e.key) == key ||
+                             (key != null && key.equals(k)))) {
+                            node = e;
+                            break;
+                        }
+                        p = e;
+                    } while ((e = e.next) != null);
+                }
+            }
+            // 删除节点
+            if (node != null && (!matchValue || (v = node.value) == value ||
+                                 (value != null && value.equals(v)))) {
+                if (node instanceof TreeNode)
+                    ((TreeNode<K,V>)node).removeTreeNode(this, tab, movable);
+                else if (node == p)
+                    tab[index] = node.next;
+                else
+                    p.next = node.next;
+                ++modCount;
+                --size;
+                afterNodeRemoval(node);
+                return node;
+            }
+        }
+        return null;
+    }
+
+```
+
+## LinkedHashMap
+
+HashMap是无序的, 如果想要有序得存取数据, 需要使用LinkedHashMap, 它继承了HashMap, 底层通过hash表与双项链表来保存元素. 
+
+废话不多说, 直接看源码
+
+```java 
+public class LinkedHashMap<K,V> extends HashMap<K,V> implements Map<K,V>{
+
+    static class Entry<K,V> extends HashMap.Node<K,V> {
+        // 双向列表实现的关键, 存储了前驱和后继节点
+        Entry<K,V> before, after;
+        Entry(int hash, K key, V value, Node<K,V> next) {
+            super(hash, key, value, next);
+        }
+    }
+    
+    // 链表的首尾节点
+    transient LinkedHashMap.Entry<K,V> head;
+    transient LinkedHashMap.Entry<K,V> tail;    
+    // true: 按访问顺序排序; false: 按添加顺序排序
+    final boolean accessOrder;
+}
+```
+
+//todo
 
 
 
