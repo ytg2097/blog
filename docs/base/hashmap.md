@@ -278,7 +278,8 @@ HashMap底层基于数组和链表(单向)实现, 当链表中元素达到8个�
 
 ![brnarytreetolink](../.vuepress/images/binarytreetolink.png)
 
-二三树可以解决二叉查找树数的平衡问题. 它在添加一个节点时, 会先尝试将这个要添加的节点数据暂存在离他最近的一个节点中, 也就是二三树的一个节点中可以存在两个数据, 只有当一个节点出现第三个数据时, 才会调整树的结构
+二三树可以解决二叉查找树数的平衡问题. 它在添加一个节点时, 会先尝试将这个要添加的节点数据暂存在离他最近的一个节点中, 也就是二三树的一个节点中可以存在两个数据, 只有当一个节点出现第三个数据时, 会将中间数据向上拉起为新节点,
+左右数据下沉作为新节点的left和right节点
 
 ![23tree](../.vuepress/images/23tree.png)
 
@@ -286,45 +287,98 @@ HashMap底层基于数组和链表(单向)实现, 当链表中元素达到8个�
 
 在二三树之外, 还有二三四树, 它与二三树类似. 这两种模型的代码实现比较烦琐, 且效率不高. 首先节点需要多次比较, 不像二叉树非左即右, 其次结构调整也有一定复杂度.
 
-## 红黑树
+### 红黑树
 
-红黑树是二三树和二三四数的另外一种表现形式, 它更利于编码实现, 
+红黑树是二三树和二三四数的另外一种表现形式, 它更利于编码实现,
 
-红黑树的特点:
+wiki百科中的红黑树
 
-- 红黑树的根节点是黑色.
-- 每个红色节点的两个子节点一定是黑色的. 同一条链路上不能有链路的红色节点
-- 任一结点到每个叶子节点的路径都包含数量相同的黑色节点.
+![rbt](../.vuepress/images/rbt.png) 
 
-### 红黑树的转换规则
+红黑树的特点或者说约束:
+
+- 红黑树的节点是红色或黑色
+- 红黑树的根节点是黑色
+- 所有的nil节点是黑色, 叶子节点的左右节点都指向nil节点, 根节点的parent节点指向nil节点
+- 每个红色节点的两个子节点一定是黑色的. 不存在红色节点的left或right也是红色的情况
+- 任一节点到每个nil节点的路径都包含数量相同的黑色节点.
+
+红黑树的查询与普通的二叉树查询一样, 插入有不同, 多除了旋转与染色操作用于调整树结构.
+
+红黑树在插入节点时会**先插入一个红色节点**, 然后查看插入后的结构是否平衡, 如果不平衡则需要进行调整. 调整到平衡后再进行染色. 红黑树由二三树演变而来, 但红黑树的插入不会像二三树一样在一个节点中存在两个数据, 
+出现第三个数据时才调整平衡. 红黑树会像二叉树一样先按照非左即右的规则插入, 当发现一侧倾斜之后再进行调整, 这个调整分为左旋与右旋, 当向右侧倾斜时左旋, 想左侧倾斜时则右旋. 插入之后要再查看插入后的节点颜色
+是否满足红黑树约束, 如果不满足, 要再进行染色操作
+![rbt-insert](../.vuepress/images/rbt-insert.png)
+
+## 部分源码
+
+### 插入
+
+```java 
+    
+    // key经过hash()扰动函数计算后的hash值
+    // onlyIfAbsent  if true, 不修改因存在键值对
+    final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+                   
+        Node<K,V>[] tab; Node<K,V> p; int n, i;
+        // 若数组为空经过resize()初始化一下
+        if ((tab = table) == null || (n = tab.length) == 0){
+            n = (tab = resize()).length;
+        }    
+        
+        // --------------------
+        
+        // 查看经过索引计算后的位置是否有键值对存在
+        if ((p = tab[i = (n - 1) & hash]) == null){
+            // 没有则直接创建一个节点并set上
+            tab[i] = newNode(hash, key, value, null);
+        else {
+            Node<K,V> e; K k;
+            
+            // 查看一下本次put的key的hash与已存在键值对的key的hash是否相等, 
+            // 且
+            if (p.hash == hash &&
+                ((k = p.key) == key || (key != null && key.equals(k))))
+                e = p;
+            else if (p instanceof TreeNode)
+                e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+            else {
+                for (int binCount = 0; ; ++binCount) {
+                    if ((e = p.next) == null) {
+                        p.next = newNode(hash, key, value, null);
+                        if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            treeifyBin(tab, hash);
+                        break;
+                    }
+                    if (e.hash == hash &&
+                        ((k = e.key) == key || (key != null && key.equals(k))))
+                        break;
+                    p = e;
+                }
+            }
+            if (e != null) { // existing mapping for key
+                V oldValue = e.value;
+                if (!onlyIfAbsent || oldValue == null)
+                    e.value = value;
+                afterNodeAccess(e);
+                return oldValue;
+            }
+        }
+        ++modCount;
+        if (++size > threshold)
+            resize();
+        afterNodeInsertion(evict);
+        return null;
+    }
 
 
+```
+### 查询
 
+### 遍历
 
-
-
-
-
-
-
-
-
-
-
-
-
-参加工作以来经历了三家公司, 每一家公司都给我带来了很大的成长. 
-
-前前后后参与完成上线了8个项目, 从一开始的CRUD, 然后做一些简单的数据库表设计, 单个功能的设计, 到主导整个软甲架构的设计
-我都从中学习和实践了到了很多知识.  
-
-这期间自己的知识面, 技术栈也慢慢充实起来, 除了后台的java之外, 也写一些前端的东西, 比如说vue, 还封装过一些组件, 
-代码也写的越来越干净整洁, 也学习了一些新的概念. 比如说领域驱动设计,测试驱动开发. 而且也都在项目中实践使用了. 
-
-最重要的对自己的学习方向, 职业规划也有了比较清晰的认知. 也越来越尊重自己的程序员的职业. 
-
-然后平时喜欢看一些技术类的书籍, 做做笔记, 写写博客.
-
+### 删除
 
 
 
