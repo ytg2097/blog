@@ -528,7 +528,13 @@ public class CyclicBarrierTest{
     }
 }
 ```
-
+::: tip CountdownLatch与CyclicBarrier的区别
+| CountdownLatch | CyclicBarrier|
+|---|---|
+| 当某个线程需要等待都其他线程到达某个时间节点后再启动时可以使用闭锁|当需要所有线程在同一时间一块启动时, 可以使用栅栏|
+| CountdownLatch不可以复用, 递减计数为零后不能重新使用| CyclicBarrier可以复用, 递增到达最大技术之后可以重新计数|
+| CountdownLatch基于AQS实现|CyclicBarrier基于ReetrantLock实现|
+::: 
 ### Exchanger
 
 ---

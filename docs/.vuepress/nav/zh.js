@@ -87,6 +87,27 @@ module.exports = [
         ]
     },
     {
+      text: '基础设施',
+      items:[
+          {
+              text: 'MySQL',
+              link: '/ground/mysql/'
+          },{
+              text: 'Redis',
+              link: '/ground/redis/'
+          },{
+              text: 'Kafka',
+              link: '/ground/kafka/'
+          },{
+              text: 'ES',
+              link: '/ground/es/'
+          },{
+              text: 'Mongo',
+              link: '/ground/mongo/'
+          },
+      ]
+    },
+    {
         text: '架构',
         items: [
             {
