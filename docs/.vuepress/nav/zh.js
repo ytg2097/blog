@@ -9,10 +9,6 @@ module.exports = [
     },
 
     {
-        text: '反应式编程',
-        link: '/reactor/'
-    },
-    {
         text: 'Netty',
         link: '/netty/'
     },
@@ -75,13 +71,14 @@ module.exports = [
                 ]
             },
             {
-                text: 'WebFlux',
+                text: '响应式编程框架',
                 items: [
                     {
-                        text: 'WebFlux',
-                        link: '/webflux/'
-                    },
+                        text: '导航',
+                        link: '/reactive/'
+                    }
                 ]
+
             },
 
         ]

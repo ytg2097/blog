@@ -6,6 +6,7 @@ next: ./component
 
 # Netty
 
+- [反应器模式](./reactor.md)
 - [Netty的核心组件](./component.md)
 - [Netty服务端的初始化流程](./init.md)
 - [Netty的编解码器](./codec.md)
