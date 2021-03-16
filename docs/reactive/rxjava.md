@@ -1,5 +1,6 @@
 ---
 prev: ./
+next: ./reactive-streams
 sidebar: auto
 ---
 
