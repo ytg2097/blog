@@ -385,3 +385,12 @@ public class TemperatureController {
 4. 配置`server.port=8099`, 然后启动访问可以看到
 
 ![sse](../.vuepress/images/sse.png)
+
+## RxJava的多种响应类型
+
+
+- **Observable**: Observable不支持回压, 没有实现Publisher接口. 所以它不与响应式流规范直接兼容. 因此在将其用于大量元素的流时要注意. 不过它的`toFlowable`方法可以应用用户选择的背压策略将流转换为Flowable
+- **Flowable**: Flowable实现了响应式流规范的Publisher接口.
+- **Single**: 仅生成一个元素的流. 没有实现Publisher接口, 也具备`toFlowable`方法. 
+- **Maybe**: 生成0个或一个元素的流. 没有实现Publisher接口, 也具备`toFlowable`方法.
+- **Completable**: 不能产生onNext信号, 没有实现Publisher接口, 只能触发onError或onComplete信号. 

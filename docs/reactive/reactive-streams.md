@@ -1,5 +1,6 @@
 ---
 prev: ./rxjava
+next: ./projectreactor
 sidebar: auto
 ---
 # 响应式流
@@ -166,12 +167,12 @@ public Observable<Item> list(int count){
 > 
 > 在每个消息都很重要的情况下, 可以选择有界阻塞队列. 但是阻塞的特性会导致系统无法进行异步操作, 一旦队列满, 将会导致生产者也会被阻塞, 直到消费者消费了一个数据. 也就是说最慢的消费者吞吐量=整个系统的总吞吐量. 
 
-综上所述, 纯推模型中不受控制的语义会导致很多我们不希望出现的状况. 这也体现出了响应式宣言中强调的背压机制的重要性.
+综上所述, 纯推模型中不受控制的语义会导致很多我们不希望出现的状况. 这也体现出了响应式宣言中强调的回压机制的重要性.
  
 ### 推拉混合
 
 为了解决纯推模型的问题, 响应式流结合了拉模型制定了四个主要接口: Publisher, Subscriber, Subscription, Processor. 他们都定义在org.reactivestreams包中. 方法定义可看源码. 
-这里记录Subscription中的方法. 它是响应式流规范中实现背压机制的关键. 
+这里记录Subscription中的方法. 它是响应式流规范中实现回压机制的关键. 
 ```java 
 public interface Subscription {
     
@@ -185,4 +186,3 @@ public interface Subscription {
 才会发送元素中新的部分.
  
 
-// todo
