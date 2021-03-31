@@ -74,8 +74,20 @@ module.exports = [
                 text: '响应式编程框架',
                 items: [
                     {
-                        text: '导航',
+                        text: '响应式宣言',
                         link: '/reactive/'
+                    },
+                    {
+                        text: 'RXJava',
+                        link: '/reactive/rxjava'
+                    },
+                    {
+                        text: '响应式流',
+                        link: '/reactive/reactive-streams'
+                    },
+                    {
+                        text: 'Reactor',
+                        link: '/reactive/projectreactor'
                     }
                 ]
 
