@@ -1,5 +1,6 @@
 ---
 prev: ./clone
+next: ./adapter
 ---
 
 # 建造者模式
