@@ -6,7 +6,7 @@ module.exports = ctx => ({
     '/': {
       lang: 'zh-CN',
       title: '小花哥的成长日记',
-      description: '好好学习 天天向上 (翻墙浏览会慢一点)'
+      description: '保持热爱, 做一个有态度, 有追求的程序员'
     }
   },
   markdown:{

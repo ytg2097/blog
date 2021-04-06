@@ -36,7 +36,7 @@ next: ./singleton
 
 ## 行为型
 
-- [模版方法模式](./template.md)
+- [模版方法模式(√)](./template.md)
 - [命令模式](./cmd.md)
 - [访问者模式](./access.md)
 - [迭代器模式](./iterator.md)
@@ -45,7 +45,7 @@ next: ./singleton
 - [备忘录模式](./memo.md)
 - [解释器模式](./interpreter.md)
 - [状态模式](./state.md)
-- [策略模式](./strategy.md)
+- [策略模式(√)](./strategy.md)
 - [责任链模式](./chain.md)
 
 
