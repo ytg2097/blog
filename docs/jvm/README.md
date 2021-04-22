@@ -9,9 +9,8 @@ sidebar: false
 
 ## 导航
 
-- [内存区域与内存溢出](./memory.md)
-- [GC与内存分配](./gc.md)
-- [类文件结构](./class-structure.md)
 - [类加载](./class-load.md)
+- [JVM内存区域](./memory.md)
+- [GC与内存分配](./gc.md)
 - [性能监控与故障处理](./monitor.md)
 - [调优](./optimization.md)

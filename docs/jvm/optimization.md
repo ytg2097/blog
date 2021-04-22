@@ -1,5 +1,6 @@
 ---
 prev: ./monitor
+next: ./jvmconfig
 sidebar: auto
 ---
 
