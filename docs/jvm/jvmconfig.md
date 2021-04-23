@@ -31,10 +31,10 @@ JVM配置参数的第一位都是**X**, 表示对JVM的配置
      -Xms与-Xmx最好设置为相同的值, 避免扩容操作
     ::: 
     
-- -XX:PrintGCDetails: 控制台打印GC日志
+- -XX:+PrintGCDetails: 控制台打印GC日志
 
    ```
-       -XX:PrintGCDetails
+       -XX:+PrintGCDetails
    ```
    
 - -XX:NewRatio=2: 修改新生代与老年代在堆空间的占比, 后面的数字表示老年代是新生代的几倍
@@ -58,10 +58,36 @@ JVM配置参数的第一位都是**X**, 表示对JVM的配置
        -XX:-UseAdaptiveSizePolicy // 关闭自适应内存分配策略
        -XX:+UseAdaptiveSizePolicy // 开启自适应内存分配策略
    ```   
+   
 - -XX:MaxTenuringThreshold: 设置GC多少次后新生代对象晋升到老年代, 默认15次
    ```
        -XX:MaxTenuringThreshold=20  //GC20次晋升到老年代
    ```    
+   
+- -XX:HandlePromotionFailure: 设置空间分配担保, **JDK7之后不再使用**
+   ```
+       -XX:HandlePromotionFailure=true  //空间分配担保
+   ```
+   
+- -XX:+UseTLAB: 开启关闭TLAB, 默认是开启的
+   ```
+       -XX:+UseTLAB  //开启TLAB
+       -XX:-UseTLAB  //关闭TLAB
+   ```  
+
+- -XX:TLABWasteTargetPercent: 修改TLAB占Eden空间的百分比, 默认1%
+   ```
+       -XX:TLABWasteTargetPercent=5
+   ```     
+   
+- -XX:+PrintFlagsInitial: 查看所有JVM参数的默认初始值
+   ```
+       -XX:+PrintFlagsInitial
+   ```   
+- -XX:+PrintFlagsFinal: 查看所有参数的最终值(可能是默认值, 也可能修改过)
+   ```
+       -XX:+PrintFlagsFinal
+   ```               
    
 
 ## 命令
@@ -73,4 +99,11 @@ JVM配置参数的第一位都是**X**, 表示对JVM的配置
     -   -gc: 查看GC信息
         ``` 
             jstat -gc java进程pid 
+        ```
+
+- jinfo 
+
+    - -flag: 查看运行中的jvm进程的参数配置
+        ``` 
+            jinfo -flag UseTLAB java进程pid
         ```
