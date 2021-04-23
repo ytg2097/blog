@@ -4,15 +4,19 @@ sidebar: false
 
 #  Java基础
 
-## [IO](./io.md)
+一些源码分析及小demo
 
-## [HashMap](./hashmap.md)
+## 导航
 
-## [ArrayList](./arraylist.md)
+- [IO](./io.md)
 
-## [LinkedList](./linkedlist.md)
+- [HashMap](./hashmap.md)
 
-## [Stream](./stream.md)
+- [ArrayList](./arraylist.md)
+
+- [LinkedList](./linkedlist.md)
+
+- [Stream](./stream.md)
 
 - ...
 

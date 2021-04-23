@@ -1,6 +1,6 @@
 ---
 prev: ./memory
-next: ./class-structure
+next: ./monitor
 sidebar: auto
 ---
 

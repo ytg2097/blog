@@ -14,3 +14,4 @@ sidebar: false
 - [GC与内存分配](./gc.md)
 - [性能监控与故障处理](./monitor.md)
 - [调优](./optimization.md)
+- [JVM配置](./jvmconfig.md)

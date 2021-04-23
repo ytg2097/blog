@@ -1,5 +1,5 @@
 ---
-prev: ./class-load
+prev: ./gc
 next: ./optimization
 sidebar: auto
 ---
