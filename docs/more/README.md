@@ -15,5 +15,6 @@ sidebar: false
 - [k8s](./k8s.md)
 - [Protobuf](./protobuf.md)
 - [UML](./uml.md)
+- [DevOps, CI/CD, Gitlab-CI](./gitlab-ci.md)
 - 未完待续...
 

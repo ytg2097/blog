@@ -1,5 +1,6 @@
 ---
 prev: ./protobuf
+next: ./gitlab-ci
 sidebar: auto
 ---
 
