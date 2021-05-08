@@ -133,7 +133,9 @@ volumes:
     name: gitlab-runner-config
 ```
 
-docker-compose命令启动后, 发现生成的gitlab仓库的clone地址是按照容器的hostname生成的: `http://gitlab/root/demo.git`, 所以我们通过修改gitlab的配置文件gitlab.rb来修改为固定的url访问地址. 
+docker-compose命令启动后, 发现生成的gitlab仓库的clone地址是按照容器的hostname生成的: `http://gitlab/root/demo.git`, 
+
+我们可以通过修改gitlab的配置文件gitlab.rb来修改为固定的url访问地址. 
 在docker-compose.yml中已经配置了将gitlab的config文件挂载到gitlab-config卷中. 我们进入到gitlab-config卷的宿主机目录, 分别修改gitlab.rb与gitlab.yml文件. 
 
 - gitlab.rb文件中我们在文件底部增加三个配置
@@ -160,7 +162,7 @@ gitlab:
 
 ### 2. 注册GitlabRunner
 
-#### 2.1 运行如下命令
+先运行如下命令
 ```bash
 docker exec -it gitlab-runner gitlab-runner register 
 ```
@@ -170,36 +172,36 @@ git地址与runner可以在gitlab中项目的settings中找到.
 
 ![runner-config](../.vuepress/images/runner-config.png)
 
-输入Gitlab实例地址: 
+```bash
 
-    Enter the GitLab instance URL (for example, https://gitlab.com/):
-    http://192.168.7.105:8080/
+Enter the GitLab instance URL (for example, https://gitlab.com/):
+# 输入Gitlab实例地址: 
+http://192.168.7.105:8080/
 
-输入token
-
-    Enter the registration token:
-    abcdefg 
+Enter the registration token:
+# 输入token
+abcdefg 
     
-输入描述
-
-    Enter the gitlab-ci description for this runner
-    runner
+Enter the gitlab-ci description for this runner
+# 输入描述
+runner
     
-输入与这个Runner关联的标签, 这个标签可以在.gitlab-ci.yml中用来指定Runner
+Enter the gitlab-ci tags for this runner (comma separated):
+# 输入与这个Runner关联的标签, 这个标签可以在.gitlab-ci.yml中用来指定Runner
+maven, docker
 
-    Enter the gitlab-ci tags for this runner (comma separated):
-    maven, docker
+Enter the executor: ssh, docker+machine, docker-ssh+machine, kubernetes, docker, parallels, virtualbox, docker-ssh, shell:
+# 输入Runner的执行器, 我们使用docker镜像, 所以输入docker. 
+docker            
 
-输入Runner的执行器, 我们使用docker镜像, 所以输入docker. 
+Enter the Docker image (eg. ruby:2.1):
+# 输入执行器的版本, 这里使用最新的
+docker:latest  
+```
+注册之后可以在gitlab项目的settings/CI/CD/Runners中看到
 
-    Enter the executor: ssh, docker+machine, docker-ssh+machine, kubernetes, docker, parallels, virtualbox, docker-ssh, shell:
-    docker            
+![registered](../.vuepress/images/gitlab-runner-registed.png)
 
-输入执行器的版本, 这里使用最新的
-
-    Enter the Docker image (eg. ruby:2.1):
-    docker:latest  
-      
 ### 3. 触发GitlabRunner
 
 #### 3.1 新建spring-boot项目并添加一个.gitlab-ci.yml文件.
