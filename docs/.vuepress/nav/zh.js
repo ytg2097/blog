@@ -117,6 +117,15 @@ module.exports = [
       ]
     },
     {
+        text: '容器',
+        items:[
+            {text: 'Docker', link:'https://yeasy.gitbook.io/docker_practice/'},
+            {text: 'k8s入门', link:'/container/k8s'},
+            {text: 'k8s-CICD', link:'/container/k8s-CICD'},
+            {text: 'k8s安全', link:'/container/k8s-secure'},
+        ]
+    },
+    {
         text: '架构',
         items: [
             {

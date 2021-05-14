@@ -11,8 +11,6 @@ sidebar: false
 - [JS](./JS.md)
 - [vue](./vue.md)
 - [Go](./go.md)
-- [docker](./docker.md)
-- [k8s](./k8s.md)
 - [Protobuf](./protobuf.md)
 - [UML](./uml.md)
 - [DevOps, CI/CD, Gitlab-CI](./gitlab-ci.md)

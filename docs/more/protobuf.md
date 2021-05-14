@@ -1,5 +1,5 @@
 ---
-prev: ./k8s
+prev: ./go
 next: ./uml
 sidebar: auto
 ---

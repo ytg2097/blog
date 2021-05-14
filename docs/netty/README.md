@@ -17,5 +17,5 @@ next: ./component
 - ...
 
 ::: tip 提示
-在学习Netty之前建议先学习[Reactor编程](../reactor/README.md)与Java的[NIO](../base/io.md##NIO)
+在学习Netty之前建议先学习[Reactor编程](../netty/reactor.md)与Java的[NIO](../base/io.md##NIO)
 :::

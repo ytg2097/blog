@@ -4,4 +4,4 @@ sidebar: auto
 
 # Redis
 
-待学习...
+待补充.

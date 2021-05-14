@@ -1,6 +1,6 @@
 ---
 next: ./design
-sidebar: auto
+sidebar: none
 ---
 
 
