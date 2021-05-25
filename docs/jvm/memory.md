@@ -141,6 +141,96 @@ youngGC之前会检查老年代最大可用连续空间是否大于新生代所�
 
 TLAB(Thread Local Allocation Buffer)是java内存模型中的一部分, JVM在Eden中为每个线程分配一个线程的私有缓存区域, 当多线程并发分配内存时使用TLAB来避免并发问题. 如果TLAB分配失败, 则使用加锁机制确保内存分配的原子性
 
+#### 逃逸分析与栈上分配
+
+TLAB技术并不是只解决多线程并发分配内存的问题, 还可以搭配逃逸分析与栈上分配来降低GC的回收频率和提高GC的回收效率. 
+
+判断发生逃逸的依据有两种, 一种是相对于栈帧的: **判断new的对象是否有在方法的外部使用.** 这种情况是对象在一个栈帧的生命周期中进行实例化操作之后要依靠堆去共享给其他栈帧使用.
+ 另外一种是相对于线程的: **new的对象被赋值给了堆中的对象的成员变量或类的成员变量.**
+因为对象被放入堆中后, 可以被其他线程访问. 以上两种情况对于new的对象的之后的使用情况, 编译器是无法追踪的. 所以视为逸出.
+
+```java 
+    public void test1(){
+
+        // obj没有返回出去, 所以没有发生逃逸
+        Object  obj = new Object();
+        obj = null;
+    }
+    
+    public Object test2(){
+
+        // obj被return出去, 发生了逃逸
+        return new Object();
+    }
+
+    Object obj;
+    
+    public void setObj(){
+        
+        // new出来的obj可能会在外部调用, 发生了逃逸
+        this.obj = new Object();
+    }
+    
+    public Object test3(){
+
+        // obj被return出去, 发生了逃逸
+        return obj == null? new Object() : obj;
+    }
+    
+    public void test4(){
+        
+        //也是发生了逃逸, 判断逃逸的标准并不是只看当前方法, 
+        //如果使用了已逃逸都算做发生逃逸
+        Object o = test3();
+    }
+    
+    public void test5(){
+    
+        // 锁仅当前线程可见, 对象是没有逃逸的
+        synchronized (new Object()){
+        }
+    }
+```
+
+#### 同步省略
+
+
+当逃逸分析一个对象没有逸出方法时, 可能会被优化为栈上分配. **同时如果JIT编译器在通过逃逸分析判断同步代码块所使用的监视器对象只被一个线程访问**, 上面实例代码中的test5, 那么JIT会在编译时取消
+这个同步代码块来提高并发性能, 因为它是没有意义的加锁. 这个取消的过程就叫做同步省略. 
+
+#### 标量替换
+
+对于没有逃逸的对象来说, 如果满足特定条件, JIT编译器还会进行标量替换来进一步优化.
+
+标量指的是不可以在分解成更小的数据的数据. java中的标量是基本类型. 与标量相对的是聚合量. 也就是还可以再拆分的数据. java中的对象就是聚合量. 标量替换就是将聚合量拆分为标量的过程.
+
+```java
+    
+    class Obj{
+        int a;
+        int b;
+    }
+    
+    // 替换前
+    public void beforeScalarReplice(){
+    
+        Obj obj = new Obj();
+        obj.a = 1;
+        obj.b = 2;
+        System.out.println(obj.a);
+        System.out.println(obj.b);
+    }
+    // 替换后
+    public void beforeScalarReplice(){
+    
+        int a = 1;
+        int b = 2;
+     
+        System.out.println(a);
+        System.out.println(b);
+    }
+```
+
 ---
 
 ![对象分配过程](../.vuepress/images/obj-allc-flow.png)
@@ -184,7 +274,7 @@ reference中直接存储对象地址, 好处是访问速度快.
 
 ## 方法区
 
-方法区域与堆一样是线程共享的, 用于存储虚拟机加载的Class信息, 常量, 静态变凉, 即时编译器编译后的代码.
+方法区域与堆一样是线程共享的, 用于存储虚拟机加载的Class信息, 常量, 静态变量, JIT编译器编译后的代码.
 
 方法区又称为永久代, 原因是hotspot虚拟机将GC分代回收扩展至方法区, 或者说使用永久代实现方法区, 目的是让垃圾回收器可以向管理堆一样管理方法区. 
 

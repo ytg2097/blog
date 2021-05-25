@@ -481,7 +481,7 @@ k8s中的PV对象不像docker, 它可以绑定本地磁盘以及其他外部存�
 
 一个外部存储只能被一个PV使用, 一个PV可以被多个POD访问, 但是要定义规则来确保正常访问, 同时Pod不能直接访问PV, 必须经过PVC.PV对象可以通过PVC对Pod实现共享.
 
-**PV针对于PVC**有三种访问模式: 
+**PV**有三种访问模式: 
 
 - ReadWriteOnce: 限制一个PV只能以读写方式绑定到一个PVC上, 如果尝试绑定到多个PVC将会失败.
 - ReadWriteMany: 允许一个PV以读写方式挂载到多个PVC上, 这种模式只支持NFS这样的文件或对象存储.
@@ -537,9 +537,11 @@ spec:
     requests:
       storage: 3Gi
 ```
-这个文件的含义是PVC申领storageClassName为manual的PV对象大小为3G的存储空间. 这里spec.storageClassName要与PV的manifest中的spec.storageClassName相对应.
+这个文件的含义是PVC申领storageClassName为manual的PV对象大小为3G的存储空间. 这里spec.storageClassName要与PV的manifest中的spec.storageClassName相对应. 
 
-在执行apply提交后, 控制平面将会查找有相同storageClassName的且满足申领要求的PV对象, 如果找的到, 则绑定到那个PV对象上. 
+accessModes声明为rwo, 将会去寻找相同storageClassName下的支持row访问模式的PV对象. 
+
+在执行apply提交后, 控制平面将会查找有相同storageClassName的且满足申领要求的PV对象, 如果找的到, 则绑定到那个PV对象上. 否则将会一直处于Pending状态
 
 ```bash
 F:\学习\k8s\TheK8sBook\storage>kubectl get pvc
@@ -574,6 +576,8 @@ spec.volumes中不再使用hostPath. 使用persistentVolumeClaim去指定要使�
 具体的某个存储后端联系起来. 
 
 SC创建后会观察API Server上是否有新的被关联的PVC对象, 如果匹配的PVC出现, SC会自动在后端存储系统上创建所需要的卷,以及在k8s上创建PV. 
+
+SC还有一个重要的作用是减少PVC对PV的详细信息的依赖.
 #### manifest
 
 还是在本地测试一下

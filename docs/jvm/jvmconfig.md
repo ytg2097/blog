@@ -80,6 +80,11 @@ JVM配置参数的第一位都是**X**, 表示对JVM的配置
        -XX:TLABWasteTargetPercent=5
    ```     
    
+- -XX:+DoEscapeAnalysis: jdk7后Server模式下默认启动逃逸分析
+   ```
+       -XX:TLABWasteTargetPercent=5
+   ```     
+   
 - -XX:+PrintFlagsInitial: 查看所有JVM参数的默认初始值
    ```
        -XX:+PrintFlagsInitial
