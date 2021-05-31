@@ -7,11 +7,6 @@ module.exports = [
         text: '微服务',
         link: '/microservice/'
     },
-
-    {
-        text: 'Netty',
-        link: '/netty/'
-    },
     {
         text: '并发',
         link: '/concurrent/'
@@ -71,7 +66,7 @@ module.exports = [
                 ]
             },
             {
-                text: '响应式编程框架',
+                text: '响应式',
                 items: [
                     {
                         text: '响应式宣言',
@@ -92,11 +87,20 @@ module.exports = [
                 ]
 
             },
+            {
+                text: 'Netty',
+                items:[
+                    {
+                        text: '导航',
+                        link: '/netty/'
+                    }
+                ]
+            },
 
         ]
     },
     {
-      text: '基础设施',
+      text: '数据库',
       items:[
           {
               text: 'MySQL',
@@ -104,23 +108,32 @@ module.exports = [
           },{
               text: 'Redis',
               link: '/ground/redis/'
-          },{
-              text: 'Kafka',
-              link: '/ground/kafka/'
-          },{
-              text: 'ES',
-              link: '/ground/es/'
-          },{
+          },
+          {
               text: 'Mongo',
               link: '/ground/mongo/'
           },
       ]
     },
     {
-        text: '容器',
+      text: '中间件',
+      items: [
+          {
+              text: 'Kafka',
+              link: '/ground/kafka/'
+          },{
+              text: 'ES',
+              link: '/ground/es/'
+          },
+      ]
+    },
+    {
+        text: '云原生',
         items:[
             {text: 'Docker', link:'https://yeasy.gitbook.io/docker_practice/'},
             {text: 'k8s入门', link:'/container/k8s'},
+            {text: 'k8s进阶一: 网络', link:'/container/k8s-network'},
+            {text: 'k8s进阶二: 存储', link:'/container/k8s-storage'},
             {text: 'k8s-CICD', link:'/container/k8s-CICD'},
             {text: 'k8s安全', link:'/container/k8s-secure'},
         ]

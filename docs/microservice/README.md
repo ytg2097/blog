@@ -28,11 +28,11 @@ sidebar: none
 
 本来主要记录微服务设计实现与落地的一些方式方法:
 
-- [服务设计](design.md)
-- [服务拆分](split.md)
-- [服务间通信](contact.md)
+- [服务设计](./design.md)
+- [服务拆分](./split.md)
+- [服务间通信](./contact.md)
 - [分布式事务](./ts.md)
-- [服务质量](quality.md)
-- [服务部署](deploy.md)
+- [服务质量](./quality.md)
+- [服务部署](./deploy.md)
 - [CQRS](./CQRS.md)
 

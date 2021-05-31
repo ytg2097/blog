@@ -1,5 +1,5 @@
 ---
-prev: ./k8s
+prev: ./k8s-storage
 next: ./k8s-secure
 sidebar: auto
 ---

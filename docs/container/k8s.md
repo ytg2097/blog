@@ -1,5 +1,5 @@
 ---
-next: ./k8s-CICD
+next: ./k8s-network
 sidebar: auto
 ---
 

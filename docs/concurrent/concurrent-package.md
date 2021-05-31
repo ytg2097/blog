@@ -102,7 +102,12 @@ public class Thread implements Runnable {
 ---
 
 ThreadLocal并不是存储数据的容器, 它只是一个引用, 它的内部维护了一个ThreadLocalMap容器, 元素以ThreadLocal实例为key, 保存对象为value. ThreadLocalMap并没有实现Map接口, 而是自行实现了Map的功能.
-它维护的Entry对象继承了WeakReference, 目的是将ThreadLocal对象的生命周期与Thread的生命周期解绑.
+它维护的Entry对象继承了WeakReference, 目的是将ThreadLocal对象的生命周期与Thread的生命周期解绑. 
+
+ThreadLocal 是一种基于斐波那契（Fibonacci）散列法存放数组开放寻址结构，本身他对数据的散列效果非常好，
+那么为了把这种散列效果用的更高，就需要让整个数组长度上的空间尽可能被最快利用。那么使用弱引用后，
+在JVM进行垃圾回收时，无论内存是否充足，都会回收被弱引用关联的对象，也就能尽可能的释放掉不再使用的空间。
+从而提升ThreadLocal 数据存放和读取的效率，尽可能降低因数据碰撞寻址后导致的大链条 O(n) 时间复杂度。
 
 ```java 
     static class ThreadLocalMap {
