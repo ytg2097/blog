@@ -44,11 +44,11 @@ module.exports = ctx => ({
         ariaLabel: '选择语言',
         lastUpdated: '上次更新',
         nav: require('./nav/zh'),
-        sidebar: {
-          '/ddd/':getDDDSidebar(),
-          '/microservice/':getMSSidebar(),
-
-        }
+        // sidebar: {
+        //   '/ddd/':getDDDSidebar(),
+        //   '/microservice/':getMSSidebar(),
+        //
+        // }
       }
     }
   },
