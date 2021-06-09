@@ -86,7 +86,11 @@ JVM配置参数的第一位都是**X**, 表示对JVM的配置
 - -XX:MaxMetaspaceSize: 修改最大元空间大小
    ```
        -XX:MaxMetaspaceSize=200m 
-   ```         
+   ```   
+- -XX:MaxDirectMemorySize: 修改直接内存占用上限
+   ```
+       -XX:MaxDirectMemorySize=20m 
+   ```      
    
 - -XX:+PrintFlagsInitial: 查看所有JVM参数的默认初始值
    ```
