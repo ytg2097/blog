@@ -1,5 +1,6 @@
 ---
 prev: ./k8s-CICD
+next: ./k8s-cluster
 sidebar: auto
 ---
 

@@ -136,6 +136,7 @@ module.exports = [
             {text: 'k8s进阶二: 存储', link:'/container/k8s-storage'},
             {text: 'k8s-CICD', link:'/container/k8s-CICD'},
             {text: 'k8s安全', link:'/container/k8s-secure'},
+            {text: 'k8s集群搭建', link:'/container/k8s-cluster'},
         ]
     },
     {
