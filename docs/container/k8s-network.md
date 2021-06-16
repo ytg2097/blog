@@ -4,28 +4,13 @@ next: ./k8s-storage
 sidebar: auto
 ---
 
-# k8s进阶一: 网络
+# k8s网络一: linux网络与docker网络模型
 
-在上篇文章中我们已经知道, k8s的每个Pod都有一个独立的IP, 并且不论是否运行在那个Node中, 每个Pod之间都可以通过对方的IP来进行通信. 在这个原则下, 我们不需要额外的考虑如何
-去建立Pod之间的连接, 也不需要考虑容器的端口映射问题. 
-
-## IP-per-Pod
-
-基于上述原则, k8s抽象出一个IP-per-Pod模型. 这个模型中, IP以Pod为单位进行分配, Pod内的所有容器共享一个网络堆栈(相当于一个命名空间, 他们的IP地址, 网络设备, 配置都是相同的).
-Pod的IP和端口在Pod的内部和外部都保持一致, 也就不需要NAT来进行地址转换了. 同时同一个Pod内的容器因为共享网络命名空间, 可以直接通过localhost来相互连接.
-
-在IP-per-Pod模型下. 可以有效的利用各种域名解析和发现机制.
-
-IP-per-Pod模型消除了Docker中的动态端口映射所带来的复杂性. 
-> 在Docker的动态端口映射模式中, 因为NAT的原因访问者看到的IP端口与服务提供者实际绑定的IP端口是不一样的. 容器内应用是很难知道自身对外暴露的真实的IP和地址的. 外部应用也不能直接通过服务所在容器的私有IP和端口来访问服务.
-
-在IP-per-Pod模式下, 一个Pod就好像一台独立的机器一样, 有自己的域名解析, 端口分配, 负载均衡, 服务发现机制. 
-
-## Linux相关
+> k8s网络篇为Kubernetes网络权威指南笔记
 
 k8s的网络依赖于容器, 容器的网络依赖于Linux内核支持. 所以需要先学习理解Linux相关的网络知识. 主要是`network namespace`, `veth pair`, `bridge`, `iptables`. 
 
-### network namespace
+## network namespace
 
 linux的namespace用于隔离内核资源, 在linux中, 文件系统挂载点, 主机名, 进程PID数字空间, IP地址等全局系统资源被namespace分隔, 装到一个个抽象的独立空间中.
 比如分隔文件系统挂载点的Mount namespace, 分隔进程PID的 PID namespace, 分隔网络的network namespace. 
@@ -55,7 +40,7 @@ lrwxrwxrwx 1 root root 0 Jun 11 11:20 uts -> uts:[4026531838]
 除了使用文件描述符挂载的方式保存namespace存在, 还有一种方式可以保持namespace存在: **在namespace中放一个进程, k8s就是这么做的**.
 
 
-### veth pair
+## veth pair
 
 单独创建的network namespace是无法与其他的network namespace之间通信的, 需要借助虚拟网卡. 
 
@@ -68,7 +53,7 @@ veth是虚拟网卡virtual ethernet的缩写. veth设备总是成对的, 因此�
 
 仅有veth pair设备, 容器是无法访问外部网络的, 因为从容器发出的数据包, 实际上是进入了veth pair设备的协议栈, 如果容器需要访问网络, 则需要使用**网桥**等技术将veth pair设备接收的数据包通过某种方式转发出去. 
 
-### bridge
+## bridge
 
 由于不同network namespace之间的路由表和防火墙规则也是隔离的, 所以从自定义的network namespace向公网发包也是发不通的. 常见的解决方法有网桥或NAT的方式. 
 
@@ -105,12 +90,12 @@ bridge是不会区分接入的是物理设备还是虚拟设备的, 因为对他
 
 ![k8s-bridge-eth0](../.vuepress/images/k8s-bridge-eth0.png)
 
-### iptables
+## iptables
 
 iptables在docker和k8s中应用广泛, 在docker中做容器的端口映射; 在k8s中Service的默认模式, 网络策略都是通过iptables实现的. 
 
 
-#### 五个钩子
+### 五个钩子
 
 iptables的底层是netfilter. netfilter是一个通用的抽象的框架, 提供一套钩子函数式的管理机制. 它在整个网络流程的若干位置放置一些钩子, 并且在每个钩子上挂载一些处理函数进行处理.
 > 典型的模版方法模式的应用. 
@@ -144,7 +129,7 @@ ip层的五个钩子的位置, 对应iptables五条内置链, 分别是PREROUTIN
 
 iptables是用户空间的一个程序, 通过netlink和内核的netfilter框架打交道, 负责往钩子上配置回调函数. 
 
-#### iptables5*5
+### iptables5*5
 
 iptables5*5指五张表和五条链, 
 
@@ -184,7 +169,7 @@ iptables的规则包含两部分: **匹配条件和动作**. 匹配条件即匹�
 - JUMP: 跳转到其他用户自定义链继续执行
 
 
-#### DNAT
+### DNAT
 
 DNAT根据指定条件修改数据包的目标IP地址和目标端口. 
 
@@ -199,12 +184,12 @@ iptables -t nat -A PREROUTING -d 1.2.3.4 -p tcp --dport 80 -j DNAT --to-destinat
 - -j DNAT: 表示进行目标网络地址转换
 - --to-destination: 表示将这个包的目标地址和端口修改为10.20.30.40:8080, 但不修改协议
 
-k8s的Service的实现基础就是iptables的DNAT.
+**docker容器端口映射原理都是在本地的iptables的nat表中添加相应的规则, 将访问宿主机IP地址:hostport的包进行一次DNAT, 转换为容器IP: containerport.**
 
+**而容器访问外网时, docker则会在POSTROUTING链上创建一条Masq规则, 用宿主机的IP地址替换掉源地址.**
+## Docker网络模型
 
-## Docker网络
-
-### docker网络模式
+### 四种模式
 
 Docker有四种网络模式:
 
@@ -236,7 +221,23 @@ IP3和IP4是Docker启动容器时, 在这个地址段选择的一个没有使用
 
 一般情况下在容器网络的外面是看不到IP2,3,4的.  也就是一台机器上的容器之间可以相互通信, 不同机器上的容器不能相互通信. 因为他们可能是在相同的网络地址范围内. 
 
-为了让容器能够跨宿主机通信, 就必须在宿主机上分配端口, 然后通过这个端口路由或者代理到容器上. 而协调端口分配是十分复杂的, 特别是在集群水平扩展时. 
+### CNM
+
+容器生态中有两种主流的网络接口方案, 分别是CNM(Container Network Model) 和CNI(Container Network Interface). CNM早于CNI出现, 
+docker使用的是CNM, k8s使用的是CNI.
+
+CNM中主要有三个概念. 
+
+- **Network Sandbox**: 容器网络栈(网卡, 路由表, DNS配置). 对应的技术实现是network namespace, 一个Sandbox中可能包含多个网络的多个Endpoint.
+- **Endpoint**: Endpoint作为Sandbox接入Network的**介质**, 是Network Sandbox和Backend Network的中间桥梁. 对应的技术实现有veth pair.
+- **Backend Network**: 一组可以直接相互通信的Endpoint集合, 对应的技术实现是Linux bridge.
+
+CNM和CNI目标都是以一致的编程接口抽象网络实现. CNM现在已经不是主流, 未来还是要看CNI.
+
+---
+
+由于Linux bridge + iptables的单机部署的网络方式, 容器只在主机内部可见, 如果要在实现不同主机间的相互通信还需要借助一些插件比如flannel, calico. 后面会再写 
+
 
 ## k8s网络模式
 
