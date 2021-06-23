@@ -1,6 +1,6 @@
 ---
 prev: ./k8s
-next: ./k8s-storage
+next: ./k8s-network2
 sidebar: auto
 ---
 
@@ -237,52 +237,3 @@ CNM和CNI目标都是以一致的编程接口抽象网络实现. CNM现在已经
 ---
 
 由于Linux bridge + iptables的单机部署的网络方式, 容器只在主机内部可见, 如果要在实现不同主机间的相互通信还需要借助一些插件比如flannel, calico. 后面会再写 
-
-
-## k8s网络模式
-
-k8s的同个Pod内的容器之间因为共享网络命名空间, 所以对网络的各种操作就好像在同一台机器上一样. 这里主要记录Pod之间的通信.
-
-### 相同节点上的Pod通信
-
-![k8s-samenodenet](../.vuepress/images/k8s-samenodenet.png)
-
-同一个节点上的Pod都是通过Veth设备对连接到同一个docker0上的, 他们的IP也都是从docker0的网段上获取的, 与网桥本身的IP属于同一个网段. 另外, Pod的默认路由也都是docker0的地址, 
-也就是所有非本地地址的网络数据都会被默认转发到docker0上, 然后由docker中转出去. 
-
-### 不同节点上的Pod通信
-
-docker0网桥的网段和宿主机的网段是不同的, 所以不同节点上的Pod通信要想办法通过宿主机IP进行寻址通信.
-
-1. k8s的网络模型要求Pod之间使用私有IP通信. 所以Pod的IP是不能冲突的, 因此k8s做了两点工作:
-
-    1. 每个分配给Pod的IP都会被k8s记录并被存储到etcd中.
-    2. 在部署k8s时会规划docker0的ip, 保证所有节点的docker0不冲突
-
-2. Pod的IP要与node的IP相关联. 这一点可以使用一些开源的组件来完成比如flannel. 
-
-### 通过service通信
-
-部署一个service会导致iptables中添加一条规则记录, 这个规则将所有的报文的目标IP为ServiceIP的报文都重定向到一个本地的随机端口. 
-
-随即端口是kube-proxy为每个创建的service指定的. 并且kube-proxy会监听那个端口, 为其创建相关的负载均衡对象. 
-
-kube-proxy会维护两个TCP连接, 一个容器的proxy的, 和kube-proxy到负载均衡的目标Pod的.
-
-
-### pause容器
-
-每启动一个Pod, 都会在Pod中同时启动一个k8s.gc.io/pause容器, 这个容器使用bridge模式, 而任务容器使用container模式与pause容器相连. 
-
-为什么使用这种方式呢? 
-
-![k8s-pause](../.vuepress/images/k8s-pause.png)
-
-如果Pod启动多个容器的话, 而且容器有依赖关系. 比如Pod1, 那么如果container4挂掉了, 其他三个容器也会同时挂掉. 使用同pause容器可以解决这个问题. 
-
-而且使用pause基础容器来执行端口映射, 其他容器连接到pause容器上的方式也简化了端口映射的过程. 
-
-任务容器的IP数据流的网络目标都是这个pause容器, 但这个pause容器并不担任流量转发的工作, 实际上任务容器直接监听了对应的端口(他们是相同的命名空间), pause容器自身没有监听端口. 他只是接管了这个Pod的endpoint.
-
-
-

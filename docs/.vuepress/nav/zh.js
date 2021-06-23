@@ -89,7 +89,7 @@ module.exports = [
             },
             {
                 text: 'Netty',
-                items:[
+                items: [
                     {
                         text: '导航',
                         link: '/netty/'
@@ -100,43 +100,54 @@ module.exports = [
         ]
     },
     {
-      text: '数据库',
-      items:[
-          {
-              text: 'MySQL',
-              link: '/ground/mysql/'
-          },{
-              text: 'Redis',
-              link: '/ground/redis/'
-          },
-          {
-              text: 'Mongo',
-              link: '/ground/mongo/'
-          },
-      ]
+        text: '数据库',
+        items: [
+            {
+                text: 'MySQL',
+                link: '/ground/mysql/'
+            }, {
+                text: 'Redis',
+                link: '/ground/redis/'
+            },
+            {
+                text: 'Mongo',
+                link: '/ground/mongo/'
+            },
+        ]
     },
     {
-      text: '中间件',
-      items: [
-          {
-              text: 'Kafka',
-              link: '/ground/kafka/'
-          },{
-              text: 'ES',
-              link: '/ground/es/'
-          },
-      ]
+        text: '中间件',
+        items: [
+            {
+                text: 'Kafka',
+                link: '/ground/kafka/'
+            }, {
+                text: 'ES',
+                link: '/ground/es/'
+            },
+        ]
     },
     {
         text: '云原生',
-        items:[
-            {text: 'Docker', link:'https://yeasy.gitbook.io/docker_practice/'},
-            {text: 'k8s入门', link:'/container/k8s'},
-            {text: 'k8s进阶一: 网络', link:'/container/k8s-network'},
-            {text: 'k8s进阶二: 存储', link:'/container/k8s-storage'},
-            {text: 'k8s-CICD', link:'/container/k8s-CICD'},
-            {text: 'k8s安全', link:'/container/k8s-secure'},
-            {text: 'k8s集群搭建', link:'/container/k8s-cluster'},
+        items: [
+            {text: 'Docker', link: 'https://yeasy.gitbook.io/docker_practice/'},
+            {
+                text: 'k8s',
+                items: [{text: 'k8s入门', link: '/container/k8s'},
+                    {text: 'k8s网络一: Linux网络与Docker网络', link: '/container/k8s-network'},
+                    {text: 'k8s网络二: Pod通信与服务发现', link: '/container/k8s-network2'},
+                    {text: 'k8s网络三: 网络插件', link: '/container/k8s-network3'},
+                    {text: 'k8s存储一: 待定', link: '/container/k8s-storage'},
+                    {text: 'k8s-CICD', link: '/container/k8s-CICD'},
+                    {text: 'k8s安全', link: '/container/k8s-secure'},
+                    {text: 'k8s集群搭建', link: '/container/k8s-cluster'},]
+            },
+            {
+                text: '服务网格',
+                items: [{text: '认识服务网格', link: '/container/service-mesh-1'},
+                    {text: 'Istio', link: '/container/k8s-network'},
+                ]
+            },
         ]
     },
     {
