@@ -1,6 +1,5 @@
 ---
 prev: ./service-mesh-1
-next: none
 sidebar: auto
 ---
 

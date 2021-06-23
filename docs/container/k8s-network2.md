@@ -33,7 +33,7 @@ IP-per-Pod模型消除了Docker中的动态端口映射所带来的复杂性.
 
 ## k8s网络架构
 
-![k8s-network](../.vuepress/images/k8s-network.png)
+![k8s-network](http://image.ytg2097.com/k8s-network.png)
 
 当我们在k8s的master中创建一个pod后, kubelet观察到新pod的创建, 会先调用CRI(Container Runtime Interface)创建Pod内的若干个容器. 
 
@@ -57,7 +57,7 @@ k8s的节点内组网与docker一样也是veth pair + bridge的方式.
 跨节点组网的解决方案有bridge, overlay等. 
 
 ### bridge
-![k8s-net-bridge](../.vuepress/images/k8s-net-bridge.png)
+![k8s-net-bridge](http://image.ytg2097.com/k8s-net-bridge.png)
 
 node1中pod的网段是10.1.1.0/24, 连接的网桥是10.1.1.1; node2中pod的网段是10.1.2.0/24, 连接的网桥是10.1.2.1; 
 
@@ -84,7 +84,7 @@ node1的路由表第三行是
 
 overlay是一个构建在物理网络之上的虚拟网络. 
 
-![k8s-net-overlay](../.vuepress/images/k8s-net-overlay.png)
+![k8s-net-overlay](http://image.ytg2097.com/k8s-net-overlay.png)
 
 overlay与bridge相同之处是pod同样接在网桥上, 目标地址在本机pod网段内的网络包同样发给linux网桥cni0;
 不同之处是, 目的pod在其他节点上的路由表规则
@@ -144,7 +144,7 @@ LoadBanlancer要求k8s运行在特定的云服务上, Ingress则没有这种要�
 
 通常情况下, Service和Pod仅在集群内部网络中通过IP访问. Ingress的作用是在集群外部网络和和集群内部网络之间开一个口子, 放外部的流量进来, 因此Ingress是建立在Service之上的访问入口. 
 
-![k8s-ingress](../.vuepress/images/k8s-ingress.png)
+![k8s-ingress](http://image.ytg2097.com/k8s-ingress.png)
 
 Ingress支持通过URL的方式将Service暴露到集群外. 
 

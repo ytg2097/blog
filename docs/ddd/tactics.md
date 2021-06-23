@@ -149,4 +149,4 @@ DDD的战术设计使业务从技术中分离出来, 让代码直接表达业务
 采用事件表的领域事件发布方式[EventBus](https://github.com/ytg2097/spring-coud-quick-starters/tree/master/iot-starter-eventbus):
 1. 在更新业务表的同时，将领域事件一并保存到数据库的事件表中，此时业务表和事件表在同一个本地事务中，即保证了原子性，又保证了效率. 
 2. 在后台开启一个任务，将事件表中的事件发布到消息队列中，发送成功之后删除掉事件
-![DDD-3](../.vuepress/images/DDD-3.png)
+![DDD-3](http://image.ytg2097.com/DDD-3.png)

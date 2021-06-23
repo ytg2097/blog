@@ -23,7 +23,7 @@ java的CAS会使用现代处理器上提供的高效机器级别的原子指令,
 
 java中的AQS. 原子变量类, 非阻塞数据结构都是使用这种模式实现的. 而current包的高层类有依赖于这些基础类.
 
-![curpackageimpl](../.vuepress/images/curpackageimpl.png)
+![curpackageimpl](http://image.ytg2097.com/curpackageimpl.png)
 
 ## ThreadLocal
 
@@ -132,7 +132,7 @@ ThreadLocal 是一种基于斐波那契（Fibonacci）散列法存放数组开�
 ---
 **ThreadLocal的内存模型**
 
-![threadLocal](../.vuepress/images/threadlocal.png)
+![threadLocal](http://image.ytg2097.com/threadlocal.png)
 
 >ThreadLocalMap的以[弱引用](../jvm/gc.md###弱引用)方式引用者ThreadLocal, 因此如果ThreadLocal没有被ThreadLocalMap以外的对象引用时, 那么下次GC就会回收掉ThreadLocal, 此时ThreadLocalMap中一组键值对的Key就变成了null, 
 >对应的value也没有办法被外部访问带, 而只要Thread又强引用了ThreadLocalMap, 若Thread实例没有被GC, ThreadLocalMap就不会被回收, key为null的value就会一直占用者内存. 此时就发生了内存泄露 
@@ -170,7 +170,7 @@ ThreadLocal 是一种基于斐波那契（Fibonacci）散列法存放数组开�
 
 在JDK1.5之后, java将工作单元与执行机制分离开. 工作单元包括runnable和callable, 执行机制有Executor框架提供. 
 
-![executor](../.vuepress/images/executor.png)
+![executor](http://image.ytg2097.com/executor.png)
 
 java多线程程序把任务分解为多个任务, 然后使用Executor把这些任务映射为固定数量的线程.
 
@@ -231,7 +231,7 @@ DelayQueue内部使用PriorityQueue存放数据, 使用ReentrantLock实现线程
         }
     } 
 ```
-![scheduledThreadPoolExecutor](../.vuepress/images/scheduledThreadPoolExecutor.png)
+![scheduledThreadPoolExecutor](http://image.ytg2097.com/scheduledThreadPoolExecutor.png)
 
 DelayQueue中的PriorityQueue会对队列中的ScheduledFutureTask进行排序, 排序时, time小的排在前面, 任务优先执行, 如果time相等, 会将入队时间较早的task放在前面. 
 
@@ -303,7 +303,7 @@ public interface Queue<E> extends Collection<E> {
 }
 ```
 
-![queue-class](../.vuepress/images/queue-class.png)
+![queue-class](http://image.ytg2097.com/queue-class.png)
 
 **常用的队列实现**
 
@@ -360,11 +360,11 @@ CopyOnWriteArrayList在遍历操作为主要操作(读多写少)的情况下用�
 
 HashTable效率底下的原因是因为内部只有一把synchronized, 所有线程要去竞争. 而ConcurrentHashMap内部中有多把锁, 每一把锁用于锁容器其中一部分数据, 当多线程访问不同数据段的数据时, 线程间就不会存在锁竞争, 从而有效提高并发访问效率. 
 
-![concurrenthashmap](../.vuepress/images/concurrenthashmap.png)
+![concurrenthashmap](http://image.ytg2097.com/concurrenthashmap.png)
 
 CurrentHashMap有Segment数组结构和HashEntry数组结构组成. Segment继承了ReentrantLock. HashEntry用于存储键值对.Segment结构类似于HashMap, 是数组和链表结构. 一个Segment守护一个HashEntry数组里的元素. 
   
-![concurrenthashmap-structure](../.vuepress/images/concurrenthashmap-structure.png) 
+![concurrenthashmap-structure](http://image.ytg2097.com/concurrenthashmap-structure.png) 
 
 对一个HashEntry数组的数据进行修改时, 必须先获得与他对应的Segment锁.
 

@@ -16,10 +16,10 @@ k8s与容器技术是互补的技术, 容器用于应用的开发. k8s用于应�
 
 集群由一个或多个主节点和若干个工作节点构成. 其中主节点负责管理整个集群, 做调度决策, 监控集群, 响应事件的工作. 工作节点负责运行应用服务, 每个工作节点都有自己的主节点.
 
-![k8s](../.vuepress/images/k8s.svg)
+![k8s](http://image.ytg2097.com/k8s.svg)
 ### 主节点 
 
-![master-node](../.vuepress/images/k8s-master-node.png)
+![master-node](http://image.ytg2097.com/k8s-master-node.png)
 
 k8s的主节点(或者说控制平面, 官方文档是这么称呼的)通常有一个或多个系统服务组成.  他为集群提供了故障转移和高可用性.
 
@@ -95,7 +95,7 @@ K8s有自己的DNS, 他有一个静态IP, 并且被硬编码在每个节点中. 
 
 ## Pod
 
-![k8s-pod](../.vuepress/images/k8s-pod.png)
+![k8s-pod](http://image.ytg2097.com/k8s-pod.png)
 pod是k8s调度的原子单位, 就像容器是docker调度的原子单位一样.
 
 k8s是无法直接运行容器的, 它使用pod来对容器进行一层简单的封装, 以允许容器运行在k8s中. pod就是为用户在宿主机系统中划出一部分区域, 构建一个网络栈, 创建一组内核命名空间, 并且在其中运行一个或多个容器. 
@@ -163,7 +163,7 @@ Deployment的内部使用ReplicaSet对象来完成Pod的自愈, 滚动升级等,
 
 当滚动升级的时候, Deployment会保留原来的ReplicaSet对象的情况下, 启动一个新的ReplicaSet对象来启动新的Pod副本, 如果需要回滚, 只需要停止新的ReplicaSet, 然后启动旧ReplicaSet就可以了.
 
-![k8s-replicaSet](../.vuepress/images/k8s-replicaSet.png)
+![k8s-replicaSet](http://image.ytg2097.com/k8s-replicaSet.png)
 
 ### manifest
 
@@ -283,9 +283,9 @@ hello-deploy-6f797c4b74   8         8         8       6m59s
 
 由于Pod可能会出现扩缩容, 故障时替换的情况, 导致了Pod的IP地址变化. 因此Pod时不可靠的, 我们不能直接去依赖Pod. Service解决了这个问题, 它提供了稳定的网络. 
 
-![k8s-service](../.vuepress/images/k8s-service.png)
+![k8s-service](http://image.ytg2097.com/k8s-service.png)
 我们可以把Service对象想象为具备前后两端. 前端有自己的DNS名称, IP和端口号; 后端有对Pod的动态负载均衡机制, 并且实现了自我监控, 可以自动更新.
-![k8s-service](../.vuepress/images/k8s-servoce-selector.png)
+![k8s-service](http://image.ytg2097.com/k8s-servoce-selector.png)
 Service使用标签和标签选择器来决定将流量负载均衡到哪个Pod.
 
 ### Endpoint
@@ -363,7 +363,7 @@ spec中定义信息解释:
 - selector: 上面ports中配置的流量路由策略会作用到标签含有app=hello-world的pod上  
 
 通过apply提交后访问http://127.0.0.1:30001
-![k8s-service-nodeport](../.vuepress/images/k8s-servoce-nodeport.png)  
+![k8s-service-nodeport](http://image.ytg2097.com/k8s-servoce-nodeport.png)  
 
 使用logs命令可以查看这次流量被路由到了哪个节点
 ```bash
@@ -437,7 +437,7 @@ k8s的存储与docker的存储不一样, 它要复杂的多, pod将资源挂载�
 
 k8s的存储分为三部分: **持久化卷子系统, 插件, 存储提供者**. 
 
-![k8s-storage](../.vuepress/images/k8s-storage.png)
+![k8s-storage](http://image.ytg2097.com/k8s-storage.png)
 
 pod对象通过持久化卷子系统来完成数据与外部存储的挂载. 而k8s的持久化卷子系统通过插件层访问存储提供者. 
 

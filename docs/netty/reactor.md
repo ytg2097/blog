@@ -8,7 +8,7 @@ sidebar: auto
 
 ---
 
-![socket](../.vuepress/images/socket.png)
+![socket](http://image.ytg2097.com/socket.png)
 
 传统的网络服务设计模式会为每个连接的处理新开一个线程, 这个线程负责读取请求数据, 解码数据, 数据, 编码回复数据, 发送回复. 所有动作是串行化的. 当出现大量连接时会导致创建大量线程. 线程上下文切换开销大, 消耗资源降低效率. 
 且socket连接后, 如果客户端不再发送数据, 会搁置线程.
@@ -39,7 +39,7 @@ java的nio包实现了分发模式, 它具备非阻塞的读写, 通过感知IO�
 
 ## 单线程的Reactor模式
 
-![singleThread-Reactor](../.vuepress/images/singleThread-Reactor.png)
+![singleThread-Reactor](http://image.ytg2097.com/singleThread-Reactor.png)
 
 ```java
 
@@ -138,7 +138,7 @@ final class Handler implements Runnable {
 ```
 ## Reactor的多线程模式
 
-![multiThread-reactor](../.vuepress/images/mutiThread-reactor.png)
+![multiThread-reactor](http://image.ytg2097.com/mutiThread-reactor.png)
 将非IO操作分离来提升Reactor线程的处理性能, 比将非IO操作设计成事件驱动的方式更简单, 但是很难与IO重叠处理, 最好能在第一时间将所有的输入读入缓冲区. 可以通过线程池对线程进行调优与控制.
 
 ```java 
@@ -190,7 +190,7 @@ class Handler implements Runnable {
         }
     }
 ```
-![multiReactor](../.vuepress/images/multiReactor.png)
+![multiReactor](http://image.ytg2097.com/multiReactor.png)
 
 
 在多Reactor模式中Reactor分为了MainReactor与SubReactor两类. 

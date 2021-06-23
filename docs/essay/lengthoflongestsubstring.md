@@ -69,14 +69,14 @@ public class Solution1{
     }
 }
 ```
-![submission](../.vuepress/images/leetcode-lengthoflongestsubstring.png)
+![submission](http://image.ytg2097.com/leetcode-lengthoflongestsubstring.png)
 本地测试没有问题, 但是当在leetcode提交时没有通过测试最后一个测试用例. 因为上面的代码循环过多, 导致复杂度过高
 
 ## 滑动窗口
 
 滑动窗口就像放大镜一样, 这个窗口的大小可以是固定的, 也可以是动态调整的. 它只操作目标在窗口内的部分, 而不是操作目标的整体. 降低了循环的深度. 滑动窗口算法主要应用在数组和字符串上. 
 
-![slidingwindow](../.vuepress/images/sliding-window.png)
+![slidingwindow](http://image.ytg2097.com/sliding-window.png)
 
 接下来用代码实现:
 

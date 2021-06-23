@@ -145,7 +145,7 @@ module.exports = [
             {
                 text: '服务网格',
                 items: [{text: '认识服务网格', link: '/container/service-mesh-1'},
-                    {text: 'Istio', link: '/container/k8s-network'},
+                    {text: 'Istio', link: '/container/service-mesh-2'},
                 ]
             },
         ]

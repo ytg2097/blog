@@ -23,7 +23,7 @@ synchronized用的锁是存在java对象头里的markword中. 如果对象是数
 
 在运行期间, markword里存储的数据会随着锁标志位的变化而变化. markword可能变化为存储以下4种数据.
 
-![markword](../.vuepress/images/markword.png)  
+![markword](http://image.ytg2097.com/markword.png)  
 
 
 ## 锁升级
@@ -66,7 +66,7 @@ jdk1.6和jdk1.7中偏向锁是默认启动的, 但它在应用程序启动几秒
 > 每个尝试获取轻量级锁的线程都会执行1 2两个操作
 3. 拷贝成功后, 尝试使用cas操作将锁对象的mark word替换为指向锁记录的指针. 并将锁记录的owner指针指向锁对象的mark word.
 4. cas更新成功, 即代表持有了锁, 将锁的标志位设置为00
- ![displaced mark word](../.vuepress/images/displacedmarkword.png)
+ ![displaced mark word](http://image.ytg2097.com/displacedmarkword.png)
 5. 更新失败时判断锁对象的markword是否已经指向了当前线程, 如果是, 直接执行代码块, 如果不是, 说明多个线程在竞争, 膨胀为重量级锁, 锁标志改为10,
 mark word中存储的是指向重量级锁的指针, 后续线程都要进入阻塞, 当前线程尝试自旋回去锁
 

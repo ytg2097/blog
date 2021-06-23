@@ -120,7 +120,7 @@ public class NettyServer {
  ```
  - NioSocketChannel. 基于javaNio全异步实现.
  
- ![niosocketchannel](../.vuepress/images/niosocketchannel.png)
+ ![niosocketchannel](http://image.ytg2097.com/niosocketchannel.png)
  
  - EpollSocketChannel. 
  
@@ -204,7 +204,7 @@ ChannelFuture的await的等待时间不等于IO操作的超时时间.
  ---
  Call是IO事件触发时的回调, 它是一种抽象的概念, 可以理解为Reactor中的EventHandler角色, 在Netty中最典型的体现是ChannelHandler中的一个个钩子方法. 
  
- ![eventflow](../.vuepress/images/nettyeventflow.png)
+ ![eventflow](http://image.ytg2097.com/nettyeventflow.png)
  
  
 ## ChannelHandler

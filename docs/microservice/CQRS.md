@@ -10,7 +10,7 @@ CQRS分为读模型和写模型, 在微服务框架的可以体现为两个服�
 
 写模型的数据会同步到读模型的数据存储中, 同步过程通过消息机制完成, DDD中的消息承载领域事件
 
-![CQRS](../.vuepress/images/cqrs.png)
+![CQRS](http://image.ytg2097.com/cqrs.png)
 
 ## 读模型的数据来源
 

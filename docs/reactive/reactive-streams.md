@@ -76,7 +76,7 @@ public class PullAndPush {
 
 在上述代码中, 业务服务与数据库之间采用了异步非阻塞的交互机制. 但是它是有缺陷的. 
 
-![pull](../.vuepress/images/pull.png)
+![pull](http://image.ytg2097.com/pull.png)
 
 在逐个请求元素的过程中会导致整个请求的处理时间大部分浪费在业务服务的空闲等待上. 同时数据库不知道未来请求的数量, 意味着数据库不能提前生成数据, 因此在处于空闲状态, 等待新请求.
  
@@ -131,7 +131,7 @@ public class PullAndPush {
 
 加入批处理的操作可以显著的减少整体请求的空闲时间, 但仍存在一些缺陷. 
 
-![pull-batch](../.vuepress/images/pull-batch.png)
+![pull-batch](http://image.ytg2097.com/pull-batch.png)
 
 数据库在进行检索数据时, 业务服务仍然需要空闲等待. 同时数据库批量发送数据比发送单个数据需要更多时间. 
 
@@ -150,7 +150,7 @@ public Observable<Item> list(int count){
 
 执行流程如下:
 
-![rxjavadb-push](../.vuepress/images/rxjavadb-push.png)
+![rxjavadb-push](http://image.ytg2097.com/rxjavadb-push.png)
 
 经过这个小demo可以看出, 推模型可以将请求量降低到最小来优化整体的处理事件.  这也就是为什么RxJava以及类似的响应式类库为什么以推送数据为目地进行设计, 为什么流技术能成为分布式系统中组件之间重要的通信技术. 
 

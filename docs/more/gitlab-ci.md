@@ -31,13 +31,13 @@ CD可以理解为两部分: 持续交付Continuous Delivery和持续部署Contin
 
 在完成CI之后, 持续交付自动将已经验证通过的代码发布到代码仓库中. 持续交付的目标是拥有一个可以随时部署到生产环境的代码仓库或者分支. 
 
-![continuous-delivery](../.vuepress/images/c-delivery.png)
+![continuous-delivery](http://image.ytg2097.com/c-delivery.png)
 
 - 持续部署
 
 CI/CD的最终阶段为持续部署. 他作为持续交付的延伸, 持续部署可以自动将应用发布到生产环境. 
 
-![continuous-deployment](../.vuepress/images/c-deployment.png)
+![continuous-deployment](http://image.ytg2097.com/c-deployment.png)
 
 他与持续交付的区别是, 持续交付不是指每一个改动都要立刻部署到生产环境中, 而是指任何的代码修改都可以在任何时候实施部署. 
 
@@ -158,7 +158,7 @@ gitlab:
 
 修改后可以看到http clone地址已经修改过来了.
 
-![clone-url](../.vuepress/images/clone-url.png)
+![clone-url](http://image.ytg2097.com/clone-url.png)
 
 ### 2. 注册GitlabRunner
 
@@ -170,7 +170,7 @@ docker exec -it gitlab-runner gitlab-runner register
 执行命令后会交互式的依次输入git实例地址, runner的token等信息. 
 git地址与runner可以在gitlab中项目的settings中找到.
 
-![runner-config](../.vuepress/images/runner-config.png)
+![runner-config](http://image.ytg2097.com/runner-config.png)
 
 ```bash
 
@@ -200,13 +200,13 @@ docker:latest
 ```
 注册之后可以在gitlab项目的settings/CI/CD/Runners中看到
 
-![registered](../.vuepress/images/gitlab-runner-registed.png)
+![registered](http://image.ytg2097.com/gitlab-runner-registed.png)
 
 ### 3. 触发GitlabRunner
 
 #### 3.1 新建spring-boot项目并添加一个.gitlab-ci.yml文件.
 
-![gitlabcidemo](../.vuepress/images/gitlab-ci-demo.png) 
+![gitlabcidemo](http://image.ytg2097.com/gitlab-ci-demo.png) 
 
 #### 3.2 编写.gitlab-ci.yml文件
 
@@ -308,11 +308,11 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Dserver.port=${PO
 #### 3.4 提交修改
 已成功
 提交修改后, 整个项目的目录结构如下
-![gitlabci-directory](../.vuepress/images/gitlabci-directory.png)
+![gitlabci-directory](http://image.ytg2097.com/gitlabci-directory.png)
 
 进入gitlab项目的CI/CD页面可以看到, 两个stage已经执行成功
 
-![gitlabci-successful](../.vuepress/images/gitlabci-successful.png)
+![gitlabci-successful](http://image.ytg2097.com/gitlabci-successful.png)
 
 ## gitlab-ci.yml
 

@@ -49,7 +49,7 @@ next: ./rxjava
 在以往的网络编程模型中, 应用服务之间的通信往往是通过http通信来完成, 但在java语言中http通信是同步阻塞的. 一个服务请求另一个服务的过程中, 会耗费大量的时间在IO阻塞上不能处理其他请求. 为了实现异步非阻塞的交互,
 或者说实现即时响应性, 我们可以使用消息驱动的方式: **每个服务在消息到达时会对其做出相应, 否则处于休眠状态;  同样的, 服务发送消息的方式也应该是非阻塞的**. 由此可以得出下图
 
-![reactive](../.vuepress/images/reactive-traits-zh-cn.svg)
+![reactive](http://image.ytg2097.com/reactive-traits-zh-cn.svg)
 
 
 ## 实现响应性的方法

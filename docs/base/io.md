@@ -161,7 +161,7 @@ DirectByteBuffer继承了MappedByteBuffer, 它持有直接内存的地址引用,
 :::
 ### 零拷贝
 
-![copy](../.vuepress/images/copy.jpg)
+![copy](http://image.ytg2097.com/copy.jpg)
 传统拷贝的读写会有四次上下文切换以及两次数据拷贝. 
 - **读. 一次拷贝**
 > 1. 用户态切换到内核态
@@ -170,7 +170,7 @@ DirectByteBuffer继承了MappedByteBuffer, 它持有直接内存的地址引用,
 > 1. 用户态切换到内核态
 > 2. 内核态切换回用户态
 
-![zerocoy](../.vuepress/images/zerocopy.jpg)
+![zerocoy](http://image.ytg2097.com/zerocopy.jpg)
 
 用户态发出sendfile指令给内核态 -> 内核态完成数据处理 -> sendfile返回 
 

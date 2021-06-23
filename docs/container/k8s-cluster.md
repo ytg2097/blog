@@ -275,4 +275,4 @@ ca.crt:     1066 bytes
 namespace:  11 bytes
 ```
 
-![k8s-dashboard](../.vuepress/images/k8s-dashboard.png)
+![k8s-dashboard](http://image.ytg2097.com/k8s-dashboard.png)

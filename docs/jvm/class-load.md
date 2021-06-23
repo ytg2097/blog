@@ -36,7 +36,7 @@ sidebar: auto
         
     3. 解析
 
-        ![符号引用](../.vuepress/images/code-ref.png)
+        ![符号引用](http://image.ytg2097.com/code-ref.png)
         
         解析是将常量池中的符号引用转换为直接引用的过程. 
         符号引用是一组符号来描述所引用的目标. 符号引用的字面量形式明确定义在java虚拟机规范的class文件格式中. 

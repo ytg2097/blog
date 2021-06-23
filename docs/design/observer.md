@@ -7,7 +7,7 @@ next: ./agent
 
 观察者模式中有三个主要的概念: 被观察者, 观察者, 被观察者关心的事件. 
 
-![observer](../.vuepress/images/observer.png)
+![observer](http://image.ytg2097.com/observer.png)
 
 被观察者可以接受一个观察者的订阅, 也可以取消一个观察者的订阅. 当某个事件发生时, 被观察者可以主动的去通知对这个事件感兴趣的观察者
 

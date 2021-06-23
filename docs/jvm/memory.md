@@ -6,7 +6,7 @@ sidebar: auto
 
 # JVM的运行时内存区域
 
-![jvm-memory](../.vuepress/images/jvm-memory.png)
+![jvm-memory](http://image.ytg2097.com/jvm-memory.png)
 
 ## 程序计数器
 
@@ -16,7 +16,7 @@ sidebar: auto
 
 虚拟机栈描述的是java方法执行的内存模型, 栈是线程私有的, 线程中每个方法执行的时候会压入一个栈帧, 用于存储局部变量表, 操作数栈, 动态连接(指向运行时常量池的方法引用), 方法出口(正常退出或异常推出)等信息.
 
-![stack](../.vuepress/images/stack.jpg)
+![stack](http://image.ytg2097.com/stack.jpg)
 ### 1. 局部变量表
 
 定义为一个数字数组, 用于存储方法参数和定义在方法体内部的局部变量, 这些数据类型包括各类基本数据类型, 对象的引用以及returnAddress类型.
@@ -29,7 +29,7 @@ sidebar: auto
 
 非静态方法的局部变量表的index为0的位置会放置this引用.
 
-![lvt](../.vuepress/images/lvt.png)
+![lvt](http://image.ytg2097.com/lvt.png)
 
 在以可达性算法实现的垃圾回收器中, 局部变量表中的变量也是垃圾回收的根节点之一. 被直接或间接引用的对象都不会被回收. 
 
@@ -77,7 +77,7 @@ sidebar: auto
 
 ### 4. 虚拟机中提供的方法调用指令
 
-![invoke](../.vuepress/images/invokevirtual.png)
+![invoke](http://image.ytg2097.com/invokevirtual.png)
 
 - **普通调用指令**:
 
@@ -104,14 +104,14 @@ sidebar: auto
 
 jvm的堆内存是线程共享的, 用于存放对象实例, 是垃圾收集器管理的主要收集区域, 由于垃圾收集器采用分代算法, 所以堆又分为新生代与老年代.
  
-![heap](../.vuepress/images/heap.png)
+![heap](http://image.ytg2097.com/heap.png)
 
 新生代的Eden与From和To(两个Survivor)之间的大小比例默认为8:1:1, 新生代与老年代的大小比例默认为1:2.
 
 
 ### 对象内存分配
 
-![对象分配](../.vuepress/images/obj-allc.png)
+![对象分配](http://image.ytg2097.com/obj-allc.png)
 
 新对象**大部分** 分配到新生代的Eden区, 当新生代的Eden没有足够空间时会触发一次youngGC, 回收在Eden与From区中可达性分析中判断为可回收的对象, 如果对象本次不可回收将会移动到To区中. 然后对象的GC年龄+1. 同时
 回收Eden与From区中的垃圾对象. 如果在迁移到To区时, To区空间不足, 则会直接进入老年代. 老年代空间不足时会触发FullGC
@@ -233,7 +233,7 @@ TLAB技术并不是只解决多线程并发分配内存的问题, 还可以搭�
 
 ---
 
-![对象分配过程](../.vuepress/images/obj-allc-flow.png)
+![对象分配过程](http://image.ytg2097.com/obj-allc-flow.png)
 
 ### 对象创建过程
 

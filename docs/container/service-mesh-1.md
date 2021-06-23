@@ -36,7 +36,7 @@ Phil Calçado 在他的这篇博客 Pattern: Service Mesh 中详细解释了服�
 
 ## 服务网格架构
 
-![service-mesh-jg](../.vuepress/images/service-mesh-jg.png)
+![service-mesh-jg](http://image.ytg2097.com/service-mesh-jg.png)
 
 服务网格中分为控制平面和数据平面. 
 
@@ -70,13 +70,13 @@ sidecar一般有两种方式实现:
 
 **Service Mesh作为应用程序的Sidecar运行, 他对应用程序来说是透明的, 所有服务间的流量都会通过sidecar, 然后由sidecar转发给应用程序**.
 
-![service-mesh](../.vuepress/images/service-mesh.png)
+![service-mesh](http://image.ytg2097.com/service-mesh.png)
 
 通过sidecar模式, 业务逻辑更加专一, 其他于业务服务关系不大的事情交由sidecar去处理. 比如流量控制, 服务发现, 服务熔断等.
 
 ## Service Mesh与k8s Service 
 
-![service-mesh-vs-k8sservice](../.vuepress/images/service-mesh-vs-k8sservice.png)
+![service-mesh-vs-k8sservice](http://image.ytg2097.com/service-mesh-vs-k8sservice.png)
 
 k8s集群的每个节点上都部署了一个kube-proxy组件, 这个组件与k8s的API Service通信, 获取集群的Service信息, 然后设置iptables/IPVS规则, 
 直接将对某个Service的请求发送到对应的后端Pod上.
