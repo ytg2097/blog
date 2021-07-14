@@ -1,5 +1,6 @@
 ---
 prev: ./codec
+next: ./istio-install-error
 sidebar: auto
 ---
 

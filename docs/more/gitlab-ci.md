@@ -1,5 +1,6 @@
 ---
 prev: ./uml
+next: ./jenkins-1
 sidebar: auto
 ---
 

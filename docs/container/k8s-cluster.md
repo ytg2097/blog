@@ -183,13 +183,19 @@ To see the stack trace of this error execute with --v=5 or higher
 
 ```sh 
 docker pull coredns/coredns:1.8.0
-docker tag coredns/coredns:1.8.0 registry.cn-hangzhou.aliyuncs.com/google_containers/coredns/coredns:v1.8.0
+docker tag coredns/coredns:1.8.0 registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:v1.8.0
 ```
 
 ### 2.2 初始化master节点
 
 ```sh 
 kubeadm init --config kubeadm.yml
+```
+
+如果执行命令后报错 `/proc/sys/net/bridge/bridge-nf-call-iptables contents are not set to 1`, 执行下面的命令
+
+```sh
+echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
 ```
 
 **命令执行完毕后, 控制台输出的最后一行会有一条`kubeadm join`的命令, 用于worker节点加入集群, 复制保存下来, 后面在worker节点上**
@@ -219,7 +225,7 @@ node1   NotReady control-plane,master   80m   v1.21.1
 ```sh
 wget https://docs.projectcalico.org/v3.8/manifests/calico.yaml
 ```
-修改calico.yaml中的IP为192.168.0.0/16地方, 改为10.96.0.0/12, 要与kubeadm.yml中的serviceSubnet的值一样
+修改calico.yaml中的IP为192.168.0.0/16地方, 改为10.96.0.0/16, 要与kubeadm.yml中的serviceSubnet的值一样
 
 ```yml
 #### 搜索CALICO_IPV4POOL_CIDR然后修改这一处
@@ -245,6 +251,7 @@ kubectl apply -f calico.yaml
 在master节点执行以下命令
 
 ```sh
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 grep 'client-certificate-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d >> kubecfg.crt
 grep 'client-key-data' ~/.kube/config | head -n 1 | awk '{print $2}' | base64 -d >> kubecfg.key
 openssl pkcs12 -export -clcerts -inkey kubecfg.key -in kubecfg.crt -out kubecfg.p12 -name "kubernetes-client"
