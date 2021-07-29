@@ -5,8 +5,8 @@ module.exports = ctx => ({
   locales: {
     '/': {
       lang: 'zh-CN',
-      title: '小花哥的学习笔记',
-      description: '保持热爱, 做一个有态度, 有追求的程序员'
+      title: '见青山的博客',
+      description: '忙者自促, 执爱前行'
     }
   },
   markdown:{

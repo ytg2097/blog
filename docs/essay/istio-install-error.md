@@ -1,5 +1,6 @@
 ---
 prev: ./lengthoflongestsubstring
+next: ./nginx-root-alias
 sidebar: auto
 ---
 
