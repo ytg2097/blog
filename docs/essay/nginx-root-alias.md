@@ -1,6 +1,5 @@
 ---
 prev: ./istio-install-error
-next: ./nginx-root-alias
 sidebar: none
 ---
 
