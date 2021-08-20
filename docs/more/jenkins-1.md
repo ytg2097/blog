@@ -1,5 +1,6 @@
 ---
 prev: ./gitlab-ci
+next: ./k8s-mysql-cluster
 sidebar: auto
 ---
 
