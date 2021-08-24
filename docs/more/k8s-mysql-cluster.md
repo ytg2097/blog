@@ -1,5 +1,6 @@
 ---
 prev: ./jenkins-1
+next: ./k8s-redis-cluster
 sidebar: auto
 ---
 # k8s部署mysql的主从复制集群
