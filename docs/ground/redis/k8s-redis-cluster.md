@@ -1,5 +1,5 @@
 ---
-prev: ./k8s-mysql-cluster
+prev: ./
 sidebar: auto
 ---
 
@@ -12,6 +12,7 @@ sidebar: auto
 #### 主从复制
 
 ![replication](http://image.ytg2097.com/img/image-20210823152755829.png)
+
 主从复制模式的redis与mysql类似. master数据库的所有写命令都会保存到文件中(一般是rdb文件), slave数据库启动后会向master请求这个文件并回放文件中的命令. 在之后master每执行一个写命令都会同步给slave.
 
 主从复制模式的集群因为可以创建多个slave实例, 搭配负载均衡策略可以有效的分摊读操作的压力.
@@ -31,6 +32,7 @@ sidebar: auto
 哨兵模式基于主从复制, 引入了哨兵监控和自动故障处理.
 
 ![sentinel-cluster](http://image.ytg2097.com/img/image-20210823154202526.png)
+
 哨兵模式的集群分为两个部分: redis sentinel集群和redis replication集群. 其中sentinel集群有若干个哨兵节点组成, 哨兵节点的功能主要是监控master和slave是否正常运行; 监控到master故障时, 自动将slave转换为master; 哨兵互相监控.
 
 哨兵模式继承了主从复制模式的优点, 且解决了主从模式的master切换问题. 但是难易在线扩容.
@@ -40,6 +42,7 @@ sidebar: auto
 redis-cluster是redis3.0后推出的集群方案. 集群是去中心化的. 采用分区的多主多从的设计,  每一个分区都由一个master和多个slave组成. 分区之间相互平行. 他解决了主从复制模式不能在线扩容, master受限于单机限制的问题.
 
 ![redis-cluster](http://image.ytg2097.com/img/redis-cluster-setup.c1d7206d.png)
+
 cluster模式没有统一入口, 客户端与任意redis节点直连, 不需要代理. 集群内所有节点相互通信.  在cluster模式中, 每个节点上都有一个插槽, 这个插槽的取值范围是16383, 每当客户端存取一个key时, redis根据CRC算法对key算出一个值然后拿这个值对16383取余, 这样每个key都会在插槽中对应一个在0到16383之间的hash槽. 然后再找到插槽所对应的节点. 如果key所在的节点不是当前节点的话, 客户端请求的当前节点会通过重定向命令引导客户端去访问包含key的节点. 这就解决了主从复制模式中master受限于单机限制的问题. 因为在cluster模式中, 每一个master节点只维护一部分槽, 以及槽所映射的键值对. 而且hash槽的方式方便与扩缩容节点, 只需要移动槽和数据到对应节点就可以.
 
 同时为了保证HA, cluster模式也是有主从复制的, 一个master对应多个slave, master挂掉的时候会自动升级一个slave替补.
@@ -57,6 +60,7 @@ cluster模式没有统一入口, 客户端与任意redis节点直连, 不需要�
 codis与rediscluster类似, 也是通过hash槽来进行分片, 所以codis同样不支持多key操作.  codis不是去中心化的, codis使用zookeeper来维护hash槽位与实例之间的关系.
 
 ![codis](http://image.ytg2097.com/img/image-20210824091044018.png)
+
 参考文档: https://gitee.com/mirrors/Codis?utm_source=alading&utm_campaign=repo#/mirrors/Codis/blob/release3.2/doc/tutorial_zh.md
 
 ### 取舍
@@ -74,6 +78,7 @@ k8s使用statefulset来处理有状态的容器, 结合headless和PV/PVC实现�
 k8s中的声明式模型中要求我们向k8s提交一个API对象的描述, 然后k8s的controller会通过无限循WATCH这些API对象的变化, 确保API对象的状态与声明的状态保持一致. **operator就是k8s的controller, 只不过是针对特定的CRD(CustomResourceDifinition)实现的**.  CRD用于描述operator要控制的应用, 比如redis-cluster. CRD的作用就是为了让k8s能够认识我们的应用. 然后我们再去实现一个自定义controller去WATCH用户提交的CRD实例. 这样当用户告诉k8s: "我想要一个这样的应用". 之后针对这个应用的operator就会通过WATCH协调应用的状态达到CRD描述的状态.
 
 ![operator](http://image.ytg2097.com/img/15b4c3dc71f7221589fd3d66202a727b.png)
+
 **operator是一个针对于特殊应用的controller**, 它提供了一种在k8s API上构建应用并在k8s上部署应用的方法, 它允许开发者扩展k8s API增加新功能, 像管理k8s原生组件一样管理自定义资源. 如果想运行一个redis哨兵模式的主从集群, 那么只需要提交一个声明就可以了, 而不需要去关心这些分布式应用需要的相关领域的知识, operator本身就可以做到创建应用, 监控应用状态, 扩缩容, 升级, 故障恢复, 以及资源清理等.
 
 ### Redis Operator部署

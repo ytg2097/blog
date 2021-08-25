@@ -1,7 +1,8 @@
 ---
+next: ./k8s-mysql-cluster
 sidebar: auto
 ---
 
 # Redis
 
-待补充.
+- [k8s部署redis集群](./k8s-redis-cluster.md)
