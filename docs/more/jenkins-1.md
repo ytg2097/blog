@@ -1,5 +1,6 @@
 ---
 prev: ./gitlab-ci
+next: ./hashmap
 sidebar: auto
 ---
 

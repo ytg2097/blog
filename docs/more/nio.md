@@ -1,18 +1,13 @@
 ---
-prev: ./
-next: ./hashmap
+prev: ./hashmap
 sidebar: auto
 ---
 
 # IO 
 
-java中提供了三种IO, 分别为BIO, NIO, AIO
+java中提供了三种IO, 分别为BIO, NIO, AIO, 本篇主要记录NIO
 
-## BIO
-
-## NIO
-
-同步非阻塞IO
+## 同步非阻塞IO
 ```java 
 
     private static void test1() throws IOException {
@@ -84,7 +79,7 @@ Selector是一个Reactor对象, SocketChannel可以注册到其上, 并选择感
 
 SelectionKey是某种感兴趣的事件的集合, 如可读的key, key可以获取到对应的channel. 
 
-### ByteBuffer
+## ByteBuffer
 
 ```java 
 
@@ -144,14 +139,14 @@ public abstract class ByteBuffer extends Buffer implements Comparable<ByteBuffer
 
 0 <= mark <= position <= limit <= capacity
 
-#### HeapByteBuffer
+### HeapByteBuffer
 
 HeapByteBuffer分配在堆中. 
 
 IO的过程实际是先从直接内存copy到堆中在进行IO操作, 这个copy的动作中不会发生gc, 因为io操作都是操作的操作系统的外设, 如磁盘. 会使用JNI操作, 如果在操作中发生GC, 在GC的标记压缩内存过程中, 
 正在使用的内存区域会移动, 影响JNI, 产生OOM等异常.
 
-#### DirectByteBuffer
+### DirectByteBuffer
 DirectByteBuffer继承了MappedByteBuffer, 它持有直接内存的地址引用, 直接操作堆外内存. GC通过JNI回收堆外内存
 
 ::: tip MappedByteBuffer
@@ -159,7 +154,7 @@ DirectByteBuffer继承了MappedByteBuffer, 它持有直接内存的地址引用,
 
 文件会映射到堆外内存, java程序直接从内存中操作修改
 :::
-### 零拷贝
+## 零拷贝
 
 ![copy](http://image.ytg2097.com/copy.jpg)
 传统拷贝的读写会有四次上下文切换以及两次数据拷贝. 
@@ -175,7 +170,7 @@ DirectByteBuffer继承了MappedByteBuffer, 它持有直接内存的地址引用,
 用户态发出sendfile指令给内核态 -> 内核态完成数据处理 -> sendfile返回 
 
 零拷贝中用户态通过内存文件映射操作内存
-## AIO
+
 
 
 

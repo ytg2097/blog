@@ -1,7 +1,8 @@
 ---
-sidebar: auto
+next: ./k8s-es-cluster
+sidebar: none
 ---
 
 # ES
 
-待补充...
+- [k8s部署ES集群](./k8s-es-cluster.md)

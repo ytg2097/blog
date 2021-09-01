@@ -1,5 +1,5 @@
 ---
-next: ./k8s-mysql-cluster
+next: ./k8s-redis-cluster
 sidebar: auto
 ---
 

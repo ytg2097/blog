@@ -1,5 +1,5 @@
 ---
-prev: ./db
+prev: ./clean-code
 next: ./vue
 sidebar: auto
 ---

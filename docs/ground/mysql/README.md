@@ -1,6 +1,6 @@
 ---
 next: ./optimization
-sidebar: auto
+sidebar: none
 ---
 
 # MySQL
