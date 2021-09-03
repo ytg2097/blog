@@ -1,5 +1,4 @@
 ---
-prev: ./
 sidebar: auto
 ---
 

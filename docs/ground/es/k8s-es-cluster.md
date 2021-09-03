@@ -1,5 +1,4 @@
 ---
-prev: ./
 sidebar: auto
 ---
 # k8s部署Elasticsearch集群

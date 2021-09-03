@@ -1,5 +1,4 @@
 ---
-prev: ./
 next: ./k8s-mysql-cluster
 sidebar: auto
 ---

@@ -1,20 +1,14 @@
 ---
-next: ./tdd
 sidebar: false
 ---
 
-# 持续更新
+# 随笔
 
-- [TDD](./tdd.md)
-- [代码优化](./clean-code.md)
-- [JS](./JS.md)
-- [vue](./vue.md)
-- [Go](./go.md)
-- [Protobuf](./protobuf.md)
-- [UML](./uml.md)
-- [DevOps, CI/CD, Gitlab-CI](./gitlab-ci.md)
-- [Jenkins-1](./jenkins-1.md)
-- [HashMap](./hashmap.md)
-- [NIO与零拷贝](./nio.md)
+记录一些学习或工作中遇到的疑难杂症的解决思路与解决方法或小知识点...
 
-
+- [代码优化](clean-code.md)
+- [自定义协议编解码](codec.md)
+- [最大不重复子串的长度](lengthoflongestsubstring.md)
+- [记一次部署Istio遇到的坑](istio-install-error.md)
+- [nginx的root与alias](nginx-root-alias.md)
+- [使用h2数据库支持单元测试](h2-unittest.md)

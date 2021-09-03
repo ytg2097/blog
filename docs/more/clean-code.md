@@ -1,6 +1,4 @@
 ---
-prev: ./tdd
-next: ./JS
 sidebar: auto
 ---
 
