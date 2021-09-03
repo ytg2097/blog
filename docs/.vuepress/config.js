@@ -6,7 +6,7 @@ module.exports = ctx => ({
     '/': {
       lang: 'zh-CN',
       title: '见青山的博客',
-      description: '忙者自促, 执爱前行'
+      description: '真帅'
     }
   },
   markdown:{
@@ -28,14 +28,6 @@ module.exports = ctx => ({
     repo: 'ytg2097',
     // editLinks: true,
     docsDir: 'packages/docs/docs',
-    // #697 Provided by the official algolia team.
-    // algolia: ctx.isProd ? ({
-    //   apiKey: '3a539aab83105f01761a137c61004d85',
-    //   indexName: 'vuepress',
-    //   algoliaOptions: {
-    //     facetFilters: ['tags:v1']
-    //   }
-    // }) : null,
     smoothScroll: true,
     locales: {
       '/': {
@@ -44,11 +36,6 @@ module.exports = ctx => ({
         ariaLabel: '选择语言',
         lastUpdated: '上次更新',
         nav: require('./nav/zh'),
-        // sidebar: {
-        //   '/ddd/':getDDDSidebar(),
-        //   '/microservice/':getMSSidebar(),
-        //
-        // }
       }
     }
   },
@@ -79,85 +66,6 @@ module.exports = ctx => ({
   ]
 })
 
-function getDDDSidebar () {
-  return [
-    {
-      title: 'DDD',
-      collapsable: false,
-      children: [
-        'stratgy',
-        'tactics',
-        'DDD-microservice',
-        'event-source',
-      ]
-    }
-  ]
-}
-function getMSSidebar () {
-  return [
-    {
-      title: '微服务',
-      collapsable: false,
-      children: [
-        '服务设计',
-        '服务拆分',
-        '服务间通信',
-        '分布式事务',
-        '服务质量',
-        '服务部署',
-        'CQRS',
-      ]
-    }
-  ]
-}
-function getApiSidebar () {
-  return [
-    'cli',
-    'node'
-  ]
-}
 
 
-function getGuideSidebar (groupA, groupB) {
-  return [
-    {
-      title: groupA,
-      collapsable: false,
-      children: [
-        '',
-        'directory-structure',
-        'basic-config',
-        'assets',
-      ]
-    },
-    {
-      title: groupB,
-      collapsable: false,
-      children: [
-        'frontmatter',
-        'permalinks',
-        'markdown-slot',
-        'global-computed'
-      ]
-    }
-  ]
-}
 
-function getThemeSidebar (groupA, introductionA) {
-  return [
-    {
-      title: groupA,
-      collapsable: false,
-      sidebarDepth: 2,
-      children: [
-        ['', introductionA],
-        'using-a-theme',
-        'writing-a-theme',
-        'option-api',
-        'default-theme-config',
-        'blog-theme',
-        'inheritance'
-      ]
-    }
-  ]
-}
