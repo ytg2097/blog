@@ -1,5 +1,4 @@
 ---
-next: ./code/hashmap
 sidebar: false
 ---
 

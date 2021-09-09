@@ -12,3 +12,4 @@ sidebar: false
 - [记一次部署Istio遇到的坑](istio-install-error.md)
 - [nginx的root与alias](nginx-root-alias.md)
 - [使用h2数据库支持单元测试](h2-unittest.md)
+- [Spring boot挂载k8s的ConfigMap中的配置文件](spring-boot-k8s-configmap.md)
