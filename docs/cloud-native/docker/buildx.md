@@ -1,5 +1,5 @@
 ---
-sidebar: auto
+sidebar: false
 ---
 
 # 使用Docker buildx构架多架构镜像
