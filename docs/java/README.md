@@ -3,7 +3,6 @@ next: ./code/hashmap
 sidebar: false
 ---
 
-# Java
 
 ## 基础
 

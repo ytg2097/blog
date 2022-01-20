@@ -2,8 +2,6 @@
 sidebar: false
 ---
 
-# DevOps
-
 **DevOps强调的是研发自运维, 落地的核心是CI/CD**
 
 CI意为持续集成. Continuous Integration.

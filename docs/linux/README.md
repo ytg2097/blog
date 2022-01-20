@@ -3,6 +3,4 @@ sidebar: false
 ---
 
 
-> 慢慢来吧
-
-
+- [常用命令](cmd.md)

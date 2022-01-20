@@ -32,6 +32,10 @@ module.exports = [
         link: '/devops/'
     },
     {
+        text: 'Linux',
+        link: '/linux/'
+    },
+    {
         text: '更多',
         link: '/more/'
     },

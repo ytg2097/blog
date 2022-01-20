@@ -2,8 +2,6 @@
 sidebar: false
 ---
 
-# 中间件
-
 ## Mysql
 
 - [mysql优化](mysql/optimization.md)

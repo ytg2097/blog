@@ -1,7 +1,7 @@
 const { fs, path } = require('@vuepress/shared-utils')
 
 module.exports = ctx => ({
-  dest: '../../vuepress',
+  dest: 'dist',
   locales: {
     '/': {
       lang: 'zh-CN',
@@ -23,10 +23,12 @@ module.exports = ctx => ({
     ['meta', { name: 'msapplication-TileImage', content: '/icons/msapplication-icon-144x144.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#000000' }]
   ],
-  theme: '@vuepress/vue',
+  theme: 'reco',
   themeConfig: {
     repo: 'ytg2097',
     // editLinks: true,
+    record: "鲁ICP备2021005654号-1",
+    recordLink: "https://beian.miit.gov.cn/",
     docsDir: 'packages/docs/docs',
     smoothScroll: true,
     locales: {
