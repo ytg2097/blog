@@ -400,49 +400,28 @@ sidebar: auto
 
     ```go
     func timeSpent(inner func(op int) int) func(op int) int {
-    	// 装饰者模式
-    	return func(n int) int {
-    		start := time.Now()
-    		ret := inner(n)
-    		fmt.Println("time spent:", time.Since(start).Seconds())
-    		return ret
-    	}
+        // 装饰者模式
+        return func(n int) int {
+            start := time.Now()
+            ret := inner(n)
+            fmt.Println("time spent:", time.Since(start).Seconds())
+            return ret
+        }
     }
     func slowFunc(op int) int {
-    	time.Sleep(time.Second * 2)
-    	return op
+        time.Sleep(time.Second * 2)
+        return op
     }
     
     func TestFunc(t *testing.T) {
     
-    	newFunc := timeSpent(slowFunc)
-    	i := newFunc(20)
-    	t.Log(i)
+        newFunc := timeSpent(slowFunc)
+        i := newFunc(20)
+        t.Log(i)
     }
     ```
 
-
-
-18. Go常用的格式化输出占位符表
-
-    | 占位符 |                             含义                             |
-        | :----: | :----------------------------------------------------------: |
-    |   %v   | 以默认的方式打印变量的值（万能占位符，如果不知道变量是什么类型，用%v即可，go语言会自动为你识别） |
-    |   %T   |                        打印变量的类型                        |
-    |   %%   |                字面上的百分号，并非值的占位符                |
-    |  %+v   |              类似%v，但输出结构体时会添加字段名              |
-    |   %t   |                         true或false                          |
-    |   %b   |                         表示为二进制                         |
-    |   %c   |                    该值对应的unicode码值                     |
-    |   %d   |                         表示为十进制                         |
-    |   %o   |                         表示为八进制                         |
-    |   %x   |                   表示为十六进制，使用a-f                    |
-    |   %X   |                   表示为十六进制，使用A-F                    |
-    |   %s   |                   直接输出字符串或者[]byte                   |
-    |   %q   | 该值对应的双引号括起来的go语法字符串字面值，必要时会采用安全的转义表示 |
-    |   %p   |                表示为十六进制，并加上前导的0x                |
-
-19. Go中的可变长参
+18. Go中的可变长参
 
     ```go
     func sum(arr ...int) int {
@@ -458,20 +437,39 @@ sidebar: auto
 
     可变长参数接受之后其实是切片。
 
-20. 延迟执行函数defer
+19. 延迟执行函数defer
 
     延迟执行函数并不是异步，而是类似finally代码块。
 
     ```
     func TestDefer(t *testing.T){
-    	defer Clear()
-    	t.Log("执行")
-    	panic("error") //即使发生panic，defer函数也会执行。
+        defer Clear()
+        t.Log("执行")
+        panic("error") //即使发生panic，defer函数也会执行。
     }
     func Clear(){
-    	fmt.Println("clear resources")
+        fmt.Println("clear resources")
     }
     ```
+20. Go常用的格式化输出占位符表
+
+    | 占位符 |                             含义                             |
+            | :----: | :----------------------------------------------------------: |
+    |   %v   | 以默认的方式打印变量的值（万能占位符，如果不知道变量是什么类型，用%v即可，go语言会自动为你识别） |
+    |   %T   |                        打印变量的类型                        |
+    |   %%   |                字面上的百分号，并非值的占位符                |
+    |  %+v   |              类似%v，但输出结构体时会添加字段名              |
+    |   %t   |                         true或false                          |
+    |   %b   |                         表示为二进制                         |
+    |   %c   |                    该值对应的unicode码值                     |
+    |   %d   |                         表示为十进制                         |
+    |   %o   |                         表示为八进制                         |
+    |   %x   |                   表示为十六进制，使用a-f                    |
+    |   %X   |                   表示为十六进制，使用A-F                    |
+    |   %s   |                   直接输出字符串或者[]byte                   |
+    |   %q   | 该值对应的双引号括起来的go语法字符串字面值，必要时会采用安全的转义表示 |
+    |   %p   |                表示为十六进制，并加上前导的0x                |
+    
 
 > 字符集：http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html?from=timeline
 
